@@ -1,0 +1,3 @@
+[submodule "lib/min"]
+	path = lib/min
+	url = https://github.com/harveybia/min
