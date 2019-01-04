@@ -1,132 +1,56 @@
 
-## ¸ÅÊö
+## RoboMky Firmware
 
-### Èí¼þ»·¾³
+### Team Information
+
+**Team Monkey**
+
+CMU Robotics Capstone 16-450 and 16-474.
+
+Robotic jogging companion project: _robomonkey_
+
+### Description
+
+This is a STM32F4 firmware for Robomaster development board type A.
+
+Here are some features implemented in this firmware:
+
+- Processes commands for driving the Robomaster rm_infantry mobile chassis
+- Sends feedback and monitoring information to PC via USART
+
+### Software Environment
 
  - Toolchain/IDE : MDK-ARM V5
  - package version: STM32Cube FW_F4 V1.16.0
  - FreeRTOS version: 9.0.0
  - CMSIS-RTOS version: 1.02
 
-### ±à³Ì¹æ·¶
+### Coding Standards
 
-- ±äÁ¿ºÍº¯ÊýÃüÃû·½Ê½×ñÑ­ Unix/Linux ·ç¸ñ
-- ÔÚ Application/AppCtrl ÖÐ¶¼ÎªÇ¿ÊµÊ±µÄ¿ØÖÆÈÎÎñ£¬½ûÖ¹Ê¹ÓÃÈÎºÎ×èÈû²Ù×÷
-- ÔÚÆäËûÈÎÎñÖÐÊ¹ÓÃµÄ×èÈû²Ù×÷ÒªÉèÖÃºÏÀíµÄ³¬Ê±Ê±¼ä£¬ÓÅÏÈ¼¶¡¢ÆµÂÊ²»Í¬µÄÈÎÎñ½÷É÷Ê¹ÓÃ»¥³âËøµÈ×èÈû²Ù×÷£¬·ÀÖ¹ÓÅÏÈ¼¶·­×ª£¬ÈçÆµÂÊ½ÏµÍµÄ detect_task ºÍÆµÂÊ½Ï¸ßµÄ info_get_task
+- å˜é‡å’Œå‡½æ•°å‘½åæ–¹å¼éµå¾ª Unix/Linux é£Žæ ¼
+- åœ¨ Application/AppCtrl ä¸­éƒ½ä¸ºå¼ºå®žæ—¶çš„æŽ§åˆ¶ä»»åŠ¡ï¼Œç¦æ­¢ä½¿ç”¨ä»»ä½•é˜»å¡žæ“ä½œ
+- åœ¨å…¶ä»–ä»»åŠ¡ä¸­ä½¿ç”¨çš„é˜»å¡žæ“ä½œè¦è®¾ç½®åˆç†çš„è¶…æ—¶æ—¶é—´ï¼Œä¼˜å…ˆçº§ã€é¢‘çŽ‡ä¸åŒçš„ä»»åŠ¡è°¨æ…Žä½¿ç”¨äº’æ–¥é”ç­‰é˜»å¡žæ“ä½œï¼Œé˜²æ­¢ä¼˜å…ˆçº§ç¿»è½¬ï¼Œå¦‚é¢‘çŽ‡è¾ƒä½Žçš„ detect_task å’Œé¢‘çŽ‡è¾ƒé«˜çš„ info_get_task
 
+### Communication Protocol
 
-### Ä£¿éÀëÏßËµÃ÷
-
-µ±³µÁ¾µÄÄ³¸öÄ£¿éÀëÏßÊ±£¬¿ÉÒÔ¸ù¾Ý¿ª·¢°åÖ¸Ê¾µÆºÍ·äÃùÆ÷µÄ²»Í¬×´Ì¬ÅÐ¶ÏÄÄ¸öÄ£¿é³öÏÖÁËÎÊÌâ£¬²¢½øÐÐ´íÎó¶¨Î»
-
-Ä¿Ç°°´ÕÕÀëÏßÄ£¿éµÄÓÅÏÈ¼¶½øÐÐ´íÎóÖ¸Ê¾£¬ÀýÈçÔÆÌ¨µç»úÓÅÏÈ¼¶¸ßÓÚ²¦µ¯µç»ú£¬Èç¹ûÍ¬Ê±·¢ÉúÀëÏß£¬ÏÈÖ¸Ê¾µ±Ç°ÀëÏßÉè±¸ÊÇÔÆÌ¨µç»ú
-
-Ä£¿éÀëÏß¶ÔÓ¦µÄ×´Ì¬ÈçÏÂ£¬Êý×Ö¶ÔÓ¦ºìµÆÃ¿´ÎÁ¬ÐøÉÁµÄ´ÎÊý£¬°´ÕÕÓÅÏÈ¼¶ÅÅÐò£º
-
-1. ÔÆÌ¨ pitch Öáµç»úÀëÏß
-2. ÔÆÌ¨ yaw Öáµç»úÀëÏß
-3. µ×ÅÌµ¥ÖáÍÓÂÝÒÇ´«¸ÐÆ÷ÀëÏß
-4. ²¦µ¯µç»úÀëÏß
-5. µ×ÅÌµç»ú´æÔÚÀëÏß
-6. Ò£¿ØÆ÷ÀëÏß£¬²ÃÅÐÏµÍ³»òÕß PC ¶Ë´®¿ÚÃ»ÓÐÁ¬½Ó£¬´ËÊ±ºìµÆ³£ÁÁ
-
-### ÎÄµµ
-
-- Ð­ÒéÎÄµµ  [protocol](Doc/protocol/ch/readme.md)
+- åè®®æ–‡æ¡£  [protocol](Doc/protocol/ch/readme.md)
 - en doc [document](Doc/en/readme.md)
 
-## ¿ìËÙ¿ªÊ¼
+## Quick Start
 
-### Ó²¼þ½Ó¿Ú
+### Hardware Interfaces
 
-Ö÷¿Ø°åÊ¹ÓÃ RM ¿ª·¢°å A ÐÍ£¬¸÷¸ö¹¦ÄÜ½Ó¿ÚµÄÎ»ÖÃÈçÏÂ£º
+ä¸»æŽ§æ¿ä½¿ç”¨ RM å¼€å‘æ¿ A åž‹ï¼Œå„ä¸ªåŠŸèƒ½æŽ¥å£çš„ä½ç½®å¦‚ä¸‹ï¼š
 
 ![](Doc/ch/image/main_board.png)
 
-### ¹¦ÄÜÄ£¿é
+## Working Modes
 
-#### ÊÖ¶¯Ä£Ê½£º
+*Noteï¼š*
 
-Ìá¹©Ò£¿ØÆ÷¡¢Êó±ê¼üÅÌÄ£Ê½µÄ»ù´¡¿ØÖÆ¡£
+åªæœ‰é»‘ä½“éƒ¨åˆ†ä¸ºè‡ªåŠ¨æ¨¡å¼ä¸‹èƒ½ç”¨åˆ°çš„å„æ¨¡å—å·¥ä½œæ¨¡å¼ï¼Œå…¶ä»–å·¥ä½œæ¨¡å¼ä¸èƒ½åœ¨è‡ªåŠ¨æ¨¡å¼ä¸‹åˆ‡æ¢ã€‚
 
-×¢Òâ£ºÈç¹ûÔÚ `sys_config.h` ÎÄ¼þÖÐ¶¨ÒåÁË `AUTO_NAVIGATION` ºê£¬½«¿ªÆô debug ºÍ È«×Ô¶¯Ä£Ê½¡£Í¬Ê±Õâ¸öÎÄ¼þ»¹°üº¬ÁËÕû¸ö²½±ø³µÏµÍ³µÄÅäÖÃ²ÎÊý£¬¿ÉÒÔ°´ÕÕÐèÇó¸ü¸ÄÏàÓ¦²ÎÊý
-
-#### È«×Ô¶¯Ä£Ê½£º
-
-ÕâÖÖÄ£Ê½ÏÂµ×ÅÌ¡¢ÔÆÌ¨¡¢·¢Éä»ú¹¹ÊÜµ½ÉÏ²ã PC µÄÍêÈ«¿ØÖÆ£¬ÍêÈ«¿ØÖÆ°üº¬¶ÔÕâÐ©Ö´ÐÐ»ú¹¹ÒÔ¾ßÌåÎïÀíµ¥Î»µÄ¿ØÖÆ£¬Ò²°üº¬¶ÔÕâÐ©Ö´ÐÐ»ú¹¹µÄÄ£Ê½ÇÐ»»¡£
-
-#### ²Ù×÷µµÎ»ËµÃ÷£º
-
-##### ÊÖ¶¯µµ
-
-Ò£¿ØÆ÷¿ØÖÆ£º²¦¸ËÓÒÉÏ
-
-- ¿ª¡¢¹ØÄ¦²ÁÂÖ
-- µ¥·¢¡¢Á¬·¢Éä»÷
-
-Êó±ê¼üÅÌ¿ØÖÆ£º£¨²¦¸Ë×óÖÐ¡¢ÓÒÉÏ£©
-
-- ¿ª£¨Q£©¡¢¹ØÄ¦²ÁÂÖ£¨Q + shift£©
-- µ¥·¢£¨µ¥»÷×ó¼ü£©¡¢Á¬·¢Éä»÷£¨³¤°´×ó¼ü£©
-- Å¤Ñü¶ã±Ü£¨E£©
-
-##### Debug µµ
-
-»úÆ÷ÈËÔÚµ÷ÊÔ»÷´ò×°¼×¡¢×ÔÉí¶ã±ÜÊ±Ê¹ÓÃ£¨²¦¸ËÓÒÖÐ£©£¬´ËÄ£Ê½ÏÂÄ¦²ÁÂÖ¼Ì³ÐÊÖ¶¯Ê±µÄ¿ª¹Ø×´Ì¬
-
-×ó²¦¸ËÎ»ÖÃ¶ÔÓ¦¹¦ÄÜ£º
-
-- ÉÏ£ºµ×ÅÌ¶ã±Ü£¬ÔÆÌ¨ÊÜÒ£¿ØÆ÷ÊÖ¶¯¿ØÖÆ
-- ÖÐ£ºµ×ÅÌ¶ã±Ü£¬ÔÆÌ¨¸úËæ×°¼×°å£¬´ËÊ±ÔÆÌ¨ºÍµ×ÅÌ¶¼²»ÊÜÊÖ¶¯¿ØÖÆ
-- ÏÂ£ºµ×ÅÌÊÜÒ£¿ØÆ÷ÊÖ¶¯¿ØÖÆ£¬ÔÆÌ¨¸úËæ×°¼×°å
-
-##### ×Ô¶¯µµ
-
-Õý³£±ÈÈüÊ±Ê¹ÓÃ£¨²¦¸ËÓÒÏÂ£©
-
-×ó²¦¸ËÎ»ÖÃ¶ÔÓ¦¹¦ÄÜ£º
-
-- ÉÏ£ºÄ¦²ÁÂÖ´ò¿ª£¬ÆäËûÈ«½Ó¹Ü
-- ÖÐ£ºÄ¦²ÁÂÖ¹Ø±Õ£¬ÆäËûÈ«½Ó¹Ü
-- ÏÂ£ºÊ§ÄÜÄ£Ê½£¬µ×ÅÌÔÆÌ¨¶Ïµç
-
-
-## ¹¤×÷Ä£Ê½ËµÃ÷
-
-*±¸×¢£º*
-
-Ö»ÓÐºÚÌå²¿·ÖÎª×Ô¶¯Ä£Ê½ÏÂÄÜÓÃµ½µÄ¸÷Ä£¿é¹¤×÷Ä£Ê½£¬ÆäËû¹¤×÷Ä£Ê½²»ÄÜÔÚ×Ô¶¯Ä£Ê½ÏÂÇÐ»»¡£
-
-### ÔÆÌ¨
-
-```c
-typedef enum
-{
-  GIMBAL_RELAX         = 0,
-  GIMBAL_INIT          = 1,
-  GIMBAL_NO_ARTI_INPUT = 2,
-  GIMBAL_FOLLOW_ZGYRO  = 3,
-  GIMBAL_TRACK_ARMOR   = 4,
-  GIMBAL_PATROL_MODE   = 5,
-  GIMBAL_SHOOT_BUFF    = 6,
-  GIMBAL_POSITION_MODE = 7,
-  GIMBAL_RELATIVE_MODE = 8,
-} gimbal_mode_e;
-```
-
-| ÔÆÌ¨Ä£Ê½                 | ¶ÔÓ¦¹¦ÄÜ                        |
-| ------------------------ | ------------------------------- |
-| GIMBAL_RELAX             | ÔÆÌ¨¶Ïµç                        |
-| GIMBAL_INIT              | ÔÆÌ¨ÓÉ¶Ïµç×´Ì¬»ØÖÐ              |
-| GIMBAL_NO_ARTI_INPUT     | ÎÞÊÖ¶¯¿ØÖÆÐÅÏ¢ÊäÈëÄ£Ê½          |
-| GIMBAL_FOLLOW_ZGYRO      | ÔÆÌ¨Õý³£µÄÊÖ¶¯¿ØÖÆ              |
-| GIMBAL_TRACK_ARMOR       | ×·×Ù×°¼×£¬±£Áô                  |
-| **GIMBAL_PATROL_MODE**   | Ñ²ÂßÄ£Ê½£¬ÔÆÌ¨ yaw ±£³ÖÖÜÆÚÔË¶¯ |
-| GIMBAL_SHOOT_BUFF        | ´ò´ó·ûÄ£Ê½£¬±£Áô                |
-| **GIMBAL_POSITION_MODE** | Ïà»úÔÚµ×ÅÌÉÏÊ±Ê¹ÓÃ              |
-| **GIMBAL_RELATIVE_MODE** | Ïà»úÔÚÔÆÌ¨  yaw ÖáÉÏÊ±Ê¹ÓÃ      |
-
-### µ×ÅÌ
+### Chassis
 
 ```c
 typedef enum
@@ -141,102 +65,79 @@ typedef enum
 } chassis_mode_e;
 ```
 
-| µ×ÅÌÄ£Ê½                     | ¶ÔÓ¦¹¦ÄÜ                 |
+| Chassis Mode             | Feature              |
 | ------------------------ | -------------------- |
-| CHASSIS_RELAX            | µ×ÅÌ¶Ïµç                 |
-| CHASSIS_STOP             | µ×ÅÌÍ£Ö¹/É²³µ              |
-| MANUAL_SEPARATE_GIMBAL   | ÊÖ¶¯Ä£Ê½µ×ÅÌÔÆÌ¨·ÖÀë           |
-| MANUAL_FOLLOW_GIMBAL     | ÊÖ¶¯Ä£Ê½µ×ÅÌ¸úËæÔÆÌ¨           |
-| **DODGE_MODE**           | µ×ÅÌ¶ã±ÜÄ£Ê½£¬µ×ÅÌ¹Ì¶¨Ðý×ª£¬Æ½ÒÆ²»ÊÜ¿ØÖÆ |
-| **AUTO_SEPARATE_GIMBAL** | µ×ÅÌºÍÔÆÌ¨·ÖÀëÄ£Ê½£¬Ðý×ª¡¢Æ½ÒÆÊÜÉÏ²ã¿ØÖÆ |
-| **AUTO_FOLLOW_GIMBAL**   | µ×ÅÌ¸úËæÔÆÌ¨£¬Æ½ÒÆÊÜÉÏ²ã¿ØÖÆ       |
+| CHASSIS_RELAX            | åº•ç›˜æ–­ç”µ                 |
+| CHASSIS_STOP             | åº•ç›˜åœæ­¢/åˆ¹è½¦              |
+| MANUAL_SEPARATE_GIMBAL   | æ‰‹åŠ¨æ¨¡å¼åº•ç›˜äº‘å°åˆ†ç¦»           |
+| MANUAL_FOLLOW_GIMBAL     | æ‰‹åŠ¨æ¨¡å¼åº•ç›˜è·Ÿéšäº‘å°           |
+| **DODGE_MODE**           | åº•ç›˜èº²é¿æ¨¡å¼ï¼Œåº•ç›˜å›ºå®šæ—‹è½¬ï¼Œå¹³ç§»ä¸å—æŽ§åˆ¶ |
+| **AUTO_SEPARATE_GIMBAL** | åº•ç›˜å’Œäº‘å°åˆ†ç¦»æ¨¡å¼ï¼Œæ—‹è½¬ã€å¹³ç§»å—ä¸Šå±‚æŽ§åˆ¶ |
+| **AUTO_FOLLOW_GIMBAL**   | åº•ç›˜è·Ÿéšäº‘å°ï¼Œå¹³ç§»å—ä¸Šå±‚æŽ§åˆ¶       |
 
-### ·¢Éä»ú¹¹
+## ç¨‹åºè¯´æ˜Ž
 
-```c
-typedef enum
-{
-  SHOT_DISABLE       = 0,
-  REMOTE_CTRL_SHOT   = 1,
-  KEYBOARD_CTRL_SHOT = 2,
-  SEMIAUTO_CTRL_SHOT = 3,
-  AUTO_CTRL_SHOT     = 4,
-} shoot_mode_e;
-```
+### ç¨‹åºä½“ç³»ç»“æž„
 
-| ·¢Éä»ú¹¹Ä£Ê½             | ¶ÔÓ¦¹¦ÄÜ                 |
-| ------------------ | -------------------- |
-| SHOT_DISABLE       | ·¢Éä»ú¹¹¶Ïµç               |
-| REMOTE_CTRL_SHOT   | Ò£¿ØÆ÷¿ØÖÆ·¢Éä»ú¹¹            |
-| KEYBOARD_CTRL_SHOT | ¼üÅÌ¿ØÖÆ·¢Éä»ú¹¹             |
-| SEMIAUTO_CTRL_SHOT | µ¥·¢¡¢Á¬·¢ÉÏ²ã¿ØÖÆ            |
-| **AUTO_CTRL_SHOT** | Ä¦²ÁÂÖ¿ª¹Ø¡¢ËÙ¶È¡¢µ¥·¢¡¢Á¬·¢È«²¿ÉÏ²ã¿ØÖÆ |
+#### ä½“ç³»æ¡†æž¶
 
-ÎªÁË»÷´ò×°¼×Ê±ÏìÓ¦¸ü¼°Ê±£¬ÔÚÕâ¸ö°æ±¾µÄ³ÌÐòÖÐ£¬×Ô¶¯Ä£Ê½Ê±µÄ·¢µ¯»¹ÊÇÓÉµ×²ã´¥·¢¡£
+1. ä½¿ç”¨å…è´¹åŠå¼€æºçš„ freertos æ“ä½œç³»ç»Ÿï¼Œå…¼å®¹å…¶ä»–å¼€æºåè®® licenseï¼›
+2. ä½¿ç”¨æ ‡å‡† CMSIS-RTOS æŽ¥å£ï¼Œæ–¹ä¾¿ä¸åŒæ“ä½œç³»ç»Ÿæˆ–å¹³å°é—´ç¨‹åºç§»æ¤ï¼›
 
-## ³ÌÐòËµÃ÷
+#### å†…éƒ¨ç»“æž„
 
-### ³ÌÐòÌåÏµ½á¹¹
+1. å¤šä»»åŠ¡çŽ¯å¢ƒï¼Œç›¸æ¯”ä¼ ç»Ÿæ­¥å…µæŽ§åˆ¶æ¡†æž¶ï¼Œå¯ä»¥ç›´æŽ¥å®žçŽ°å¤šçº¿ç¨‹é€»è¾‘ï¼Œä»¥åŠé˜»å¡žä»»åŠ¡ï¼›
+2. è¾ƒä¸ºå®Œå¤‡çš„åº•å±‚ä¸Šå±‚é€šä¿¡åè®®ï¼Œå®žçŽ°ä¸Šå±‚å¯¹æ­¥å…µå„ä¸ªæœºæž„æ¨¡å—çš„åé¦ˆä¿¡æ¯èŽ·å–å’ŒæŽ§åˆ¶ï¼›
+3. å†…éƒ¨ç¨‹åºæ¨¡å¼åˆ‡æ¢ã€æ•°æ®ã€æŽ§åˆ¶å„ä¸ªä»»åŠ¡éš”ç¦»å¤„ç†ï¼Œæ–¹ä¾¿æ·»åŠ å’Œè£å‰ªåŠŸèƒ½ï¼›
+4. åº•ç›˜ã€äº‘å°ã€å‘å°„ç­‰æœºæž„ï¼Œå†…éƒ¨çš„æŽ§åˆ¶æ¨¡å¼åŽ»è€¦åˆï¼Œä¾¿äºŽä¸åŒéœ€æ±‚æŽ§åˆ¶æ—¶çš„æ¨¡å¼åˆ‡æ¢ï¼›
 
-#### ÌåÏµ¿ò¼Ü
+#### ç¨‹åºæ¡†æž¶
 
-1. Ê¹ÓÃÃâ·Ñ¼°¿ªÔ´µÄ freertos ²Ù×÷ÏµÍ³£¬¼æÈÝÆäËû¿ªÔ´Ð­Òé license£»
-2. Ê¹ÓÃ±ê×¼ CMSIS-RTOS ½Ó¿Ú£¬·½±ã²»Í¬²Ù×÷ÏµÍ³»òÆ½Ì¨¼ä³ÌÐòÒÆÖ²£»
+1. åŸºäºŽ HAL åº“çš„ BSP å±‚ï¼Œä¸»è¦æä¾›canã€uartã€spiã€flashã€ioç­‰æ¿çº§çš„é…ç½®å’Œé€šä¿¡æŽ¥å£ï¼›
+2. æ•°æ®äº¤äº’å±‚ï¼Œè¿™é‡Œæ˜¯ç¨‹åºä¸­ä¼šè°ƒç”¨ BSP å±‚å‡½æ•°å”¯ä¸€çš„åœ°æ–¹ï¼Œä¸»è¦ä¸ºåº”ç”¨ç¨‹åºå’Œç¡¬ä»¶è®¾å¤‡çš„æ•°æ®äº¤äº’ï¼›
+3. é€šä¿¡å±‚ï¼Œè´Ÿè´£æ•°æ®å’Œ uart ç¡¬ä»¶é—´å‘é€å’ŒæŽ¥æ”¶ï¼Œä»¥åŠè¿™äº›æ•°æ®çš„æ‰“åŒ…ã€è§£æžï¼ŒåŒ…å«åè®®éƒ¨åˆ†ï¼›
+4. ä¿¡æ¯èŽ·å–ï¼Œäº¤äº’å±‚å¯ä»¥ç›´æŽ¥ä½¿ç”¨çš„æ•°æ®ã€é€šä¿¡å±‚è§£æžå¥½çš„æ•°æ®ï¼Œåœ¨è¿™ä¸ªä»»åŠ¡ä¸­èŽ·å–åŽè½¬åŒ–ä¸ºåé¦ˆå’ŒæŽ§åˆ¶ä¿¡æ¯ï¼›
+5. æ¨¡å¼åˆ‡æ¢ï¼Œåœ¨ä¸ä¿®æ”¹æŽ§åˆ¶æž¶æž„çš„æƒ…å†µä¸‹ï¼Œå®žçŽ°çŽ°æœ‰æœºæž„åŠŸèƒ½æ¨¡å¼çš„è‡ªå®šä¹‰ç»„åˆå”¯ä¸€éœ€è¦ä¿®æ”¹çš„åœ°æ–¹ï¼›
+6. æŽ§åˆ¶ä»»åŠ¡ï¼Œäº‘å°ã€åº•ç›˜ã€å°„å‡»è¿™ä¸‰ä¸ªæœºæž„çš„æŽ§åˆ¶ï¼ŒåŒ…å«è¿™äº›æœºæž„çš„ç¤ºä¾‹æ¨¡å¼ã€‚
 
-#### ÄÚ²¿½á¹¹
+### è½¯ä»¶ä½“ç³»
 
-1. ¶àÈÎÎñ»·¾³£¬Ïà±È´«Í³²½±ø¿ØÖÆ¿ò¼Ü£¬¿ÉÒÔÖ±½ÓÊµÏÖ¶àÏß³ÌÂß¼­£¬ÒÔ¼°×èÈûÈÎÎñ£»
-2. ½ÏÎªÍê±¸µÄµ×²ãÉÏ²ãÍ¨ÐÅÐ­Òé£¬ÊµÏÖÉÏ²ã¶Ô²½±ø¸÷¸ö»ú¹¹Ä£¿éµÄ·´À¡ÐÅÏ¢»ñÈ¡ºÍ¿ØÖÆ£»
-3. ÄÚ²¿³ÌÐòÄ£Ê½ÇÐ»»¡¢Êý¾Ý¡¢¿ØÖÆ¸÷¸öÈÎÎñ¸ôÀë´¦Àí£¬·½±ãÌí¼ÓºÍ²Ã¼ô¹¦ÄÜ£»
-4. µ×ÅÌ¡¢ÔÆÌ¨¡¢·¢ÉäµÈ»ú¹¹£¬ÄÚ²¿µÄ¿ØÖÆÄ£Ê½È¥ñîºÏ£¬±ãÓÚ²»Í¬ÐèÇó¿ØÖÆÊ±µÄÄ£Ê½ÇÐ»»£»
+#### ç¨‹åºå¯åŠ¨æ—¶åº
 
-#### ³ÌÐò¿ò¼Ü
-
-1. »ùÓÚ HAL ¿âµÄ BSP ²ã£¬Ö÷ÒªÌá¹©can¡¢uart¡¢spi¡¢flash¡¢ioµÈ°å¼¶µÄÅäÖÃºÍÍ¨ÐÅ½Ó¿Ú£»
-2. Êý¾Ý½»»¥²ã£¬ÕâÀïÊÇ³ÌÐòÖÐ»áµ÷ÓÃ BSP ²ãº¯ÊýÎ¨Ò»µÄµØ·½£¬Ö÷ÒªÎªÓ¦ÓÃ³ÌÐòºÍÓ²¼þÉè±¸µÄÊý¾Ý½»»¥£»
-3. Í¨ÐÅ²ã£¬¸ºÔðÊý¾ÝºÍ uart Ó²¼þ¼ä·¢ËÍºÍ½ÓÊÕ£¬ÒÔ¼°ÕâÐ©Êý¾ÝµÄ´ò°ü¡¢½âÎö£¬°üº¬Ð­Òé²¿·Ö£»
-4. ÐÅÏ¢»ñÈ¡£¬½»»¥²ã¿ÉÒÔÖ±½ÓÊ¹ÓÃµÄÊý¾Ý¡¢Í¨ÐÅ²ã½âÎöºÃµÄÊý¾Ý£¬ÔÚÕâ¸öÈÎÎñÖÐ»ñÈ¡ºó×ª»¯Îª·´À¡ºÍ¿ØÖÆÐÅÏ¢£»
-5. Ä£Ê½ÇÐ»»£¬ÔÚ²»ÐÞ¸Ä¿ØÖÆ¼Ü¹¹µÄÇé¿öÏÂ£¬ÊµÏÖÏÖÓÐ»ú¹¹¹¦ÄÜÄ£Ê½µÄ×Ô¶¨Òå×éºÏÎ¨Ò»ÐèÒªÐÞ¸ÄµÄµØ·½£»
-6. ¿ØÖÆÈÎÎñ£¬ÔÆÌ¨¡¢µ×ÅÌ¡¢Éä»÷ÕâÈý¸ö»ú¹¹µÄ¿ØÖÆ£¬°üº¬ÕâÐ©»ú¹¹µÄÊ¾ÀýÄ£Ê½¡£
-
-### Èí¼þÌåÏµ
-
-#### ³ÌÐòÆô¶¯Ê±Ðò
-
-¸÷¸öÈÎÎñµÄÆô¶¯Ê±ÐòÍ¼
+å„ä¸ªä»»åŠ¡çš„å¯åŠ¨æ—¶åºå›¾
 
 ![](Doc/ch/image/task_sequence.png)
 
-### Ó²¼þÌåÏµ
+### ç¡¬ä»¶ä½“ç³»
 
-1. Ö÷¿Ø MCU£ºSTM32F427IIHx£¬ÅäÖÃÔËÐÐÆµÂÊ180MHz
-2. Ä£¿éÍ¨ÐÅ·½Ê½£ºCAN£»CANÉè±¸£ºµç»úµçµ÷¡¢ÍÓÂÝÒÇÄ£¿é
-3. ÉÏÏÂ²ãÍ¨ÐÅ·½Ê½£ºuart
-4. ÂóÂÖ°²×°·½Ê½£¬XÐÍ
+1. ä¸»æŽ§ MCUï¼šSTM32F427IIHxï¼Œé…ç½®è¿è¡Œé¢‘çŽ‡180MHz
+2. æ¨¡å—é€šä¿¡æ–¹å¼ï¼šCANï¼›CANè®¾å¤‡ï¼šç”µæœºç”µè°ƒã€é™€èžºä»ªæ¨¡å—
+3. ä¸Šä¸‹å±‚é€šä¿¡æ–¹å¼ï¼šuart
+4. éº¦è½®å®‰è£…æ–¹å¼ï¼ŒXåž‹
 
-#### Ó²¼þÁ¬½Ó¿òÍ¼
+#### ç¡¬ä»¶è¿žæŽ¥æ¡†å›¾
 
 ![](Doc/ch/image/mcu_hardware.png)
 
-### Ð­ÒéÊý¾Ý
+### åè®®æ•°æ®
 
-#### Êý¾Ý·ÖÀà
+#### æ•°æ®åˆ†ç±»
 
-Ð­ÒéÊý¾Ý°´ÕÕÍ¨ÐÅ·½Ïò¿ÉÒÔ·ÖÎªÁ½´óÀà£º
+åè®®æ•°æ®æŒ‰ç…§é€šä¿¡æ–¹å‘å¯ä»¥åˆ†ä¸ºä¸¤å¤§ç±»ï¼š
 
-µ×²ã·¢ËÍ¸øÉÏ²ãµÄÊý¾Ý£º
+åº•å±‚å‘é€ç»™ä¸Šå±‚çš„æ•°æ®ï¼š
 
-1. ·´À¡ÐÅÏ¢£º°üº¬¸÷¸ö»ú¹¹´«¸ÐÆ÷·´À¡ÐÅÏ¢¡¢µ×²ã¼ÆËã³öÀ´µÄÒ»Ð©·´À¡ÐÅÏ¢£»
-2. µ×²ã×´Ì¬ÐÅÏ¢£º°üº¬µ×²ãÉè±¸ÔËÐÐ×´Ì¬¡¢µ×²ã¶ÔÉÏ²ãÊý¾ÝµÄÒ»Ð©ÏìÓ¦µÈ£»
-3. ×ª·¢Êý¾Ý£º°üº¬²ÃÅÐÏµÍ³µÄÈ«²¿ÐÅÏ¢¡¢·þÎñÆ÷¶ËµÄ×Ô¶¨ÒåÐÅÏ¢£»
+1. åé¦ˆä¿¡æ¯ï¼šåŒ…å«å„ä¸ªæœºæž„ä¼ æ„Ÿå™¨åé¦ˆä¿¡æ¯ã€åº•å±‚è®¡ç®—å‡ºæ¥çš„ä¸€äº›åé¦ˆä¿¡æ¯ï¼›
+2. åº•å±‚çŠ¶æ€ä¿¡æ¯ï¼šåŒ…å«åº•å±‚è®¾å¤‡è¿è¡ŒçŠ¶æ€ã€åº•å±‚å¯¹ä¸Šå±‚æ•°æ®çš„ä¸€äº›å“åº”ç­‰ï¼›
+3. è½¬å‘æ•°æ®ï¼šåŒ…å«è£åˆ¤ç³»ç»Ÿçš„å…¨éƒ¨ä¿¡æ¯ã€æœåŠ¡å™¨ç«¯çš„è‡ªå®šä¹‰ä¿¡æ¯ï¼›
 
-µ×²ã½ÓÊÕµÄÉÏ²ãÊý¾Ý£º
+åº•å±‚æŽ¥æ”¶çš„ä¸Šå±‚æ•°æ®ï¼š
 
-1. ¿ØÖÆÐÅÏ¢£ºÉÏ²ã¶Ôµ×²ã 3 ¸öÖ´ÐÐ»ú¹¹µÄ¿ØÖÆÐÅÏ¢£»
-2. ÅäÖÃÐÅÏ¢£ºÉÏ²ã¶Ô»úÆ÷ÈËÈçÂÖ¾à¡¢Öá¾à¡¢ÔÆÌ¨Î»ÖÃµÈ½á¹¹ÅäÖÃÐÅÏ¢£¬ÒÔ¼°ÉÏ²ã³ÌÐòÔËÐÐ×´Ì¬£¬µ×²ãÏìÓ¦¼¶±ðµÈ£»
-3. ×ª·¢Êý¾Ý£ºÐèÒªµ×²ã×ª·¢¸ø²ÃÅÐÏµÍ³£¬²¢×îÖÕÔÚ¿Í»§¶ËÉÏÏÔÊ¾³öÀ´µÄÓÃ»§×Ô¶¨ÒåÐÅÏ¢£»
+1. æŽ§åˆ¶ä¿¡æ¯ï¼šä¸Šå±‚å¯¹åº•å±‚ 3 ä¸ªæ‰§è¡Œæœºæž„çš„æŽ§åˆ¶ä¿¡æ¯ï¼›
+2. é…ç½®ä¿¡æ¯ï¼šä¸Šå±‚å¯¹æœºå™¨äººå¦‚è½®è·ã€è½´è·ã€äº‘å°ä½ç½®ç­‰ç»“æž„é…ç½®ä¿¡æ¯ï¼Œä»¥åŠä¸Šå±‚ç¨‹åºè¿è¡ŒçŠ¶æ€ï¼Œåº•å±‚å“åº”çº§åˆ«ç­‰ï¼›
+3. è½¬å‘æ•°æ®ï¼šéœ€è¦åº•å±‚è½¬å‘ç»™è£åˆ¤ç³»ç»Ÿï¼Œå¹¶æœ€ç»ˆåœ¨å®¢æˆ·ç«¯ä¸Šæ˜¾ç¤ºå‡ºæ¥çš„ç”¨æˆ·è‡ªå®šä¹‰ä¿¡æ¯ï¼›
 
-#### Êý¾ÝÁ÷Í¼
+#### æ•°æ®æµå›¾
 
 ![](Doc/ch/image/data_handle.png)
 
