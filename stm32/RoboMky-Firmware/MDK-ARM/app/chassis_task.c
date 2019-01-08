@@ -62,7 +62,7 @@ void chassis_task(void const *argu)
   switch (chassis.ctrl_mode)
   {
 		// TODO: this handles chassis control modes, which we should redesign
-    case DODGE_MODE:
+    case CHASSIS_MOVING:
     {
       chassis.vx = 0;
       chassis.vy = 0;

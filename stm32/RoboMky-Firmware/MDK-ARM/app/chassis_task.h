@@ -33,13 +33,15 @@
 /* chassis control period time (ms) */
 #define CHASSIS_PERIOD 10
 
+/**@brief  Chassis modes */
 typedef enum
 {
-  CHASSIS_RELAX          = 0,
-  CHASSIS_STOP           = 1,
-  DODGE_MODE             = 4,
+  CHASSIS_RELAX          = 0, /**< Chassis no power */
+  CHASSIS_STOP           = 1, /**< Chassis is stopped/breaking */
+  CHASSIS_MOVING         = 4, /**< Chassis is moving */
 } chassis_mode_e;
 
+// TODO: change this to skid steer drive
 typedef struct
 {
   float           vx; // forward/back

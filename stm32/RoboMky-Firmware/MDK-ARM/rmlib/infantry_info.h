@@ -21,6 +21,7 @@
  *  @brief the information from computer
  *
  *  @copyright 2017 DJI RoboMaster. All rights reserved.
+ *  @copyright Haowen Shi, Carnegie Mellon University.
  *
  */
 
@@ -29,7 +30,8 @@
 
 #include "stm32f4xx_hal.h"
 
-#define COMPUTER_FIFO_BUFLEN 500
+/** @brief  Length of PC FIFO buffer */
+#define COMPUTER_FIFO_BUFLEN (500)
 
 
 /** 
@@ -37,36 +39,36 @@
   */
 typedef enum
 {
-  CHASSIS_DATA_ID     = 0x0010,
-  SHOOT_TASK_DATA_ID  = 0x0012,
-  INFANTRY_ERR_ID     = 0x0013,
-  CONFIG_RESPONSE_ID  = 0x0014,
-  CALI_RESPONSE_ID    = 0x0015,
-  REMOTE_CTRL_INFO_ID = 0x0016,
-  BOTTOM_VERSION_ID   = 0x0017,
+	/* Controller -> PC */
+  CHASSIS_DATA_ID     = 0x0010, /**< 50Hz fixed, chassis info */
+  INFANTRY_ERR_ID     = 0x0013, /**< 50Hz fixed, error info */
+  CONFIG_RESPONSE_ID  = 0x0014, /**< 50Hz fixed, config response */
+  BOTTOM_VERSION_ID   = 0x0017, /**< 1Hz fixed, fw version */
   
-  CHASSIS_CTRL_ID     = 0x00A0,
-  SHOOT_CTRL_ID       = 0x00A2,
-  ERROR_LEVEL_ID      = 0x00A3,
-  INFANTRY_STRUCT_ID  = 0x00A4,
+	/* PC -> Controller */
+  CHASSIS_CTRL_ID     = 0x00A0, /**< 50Hz fixed, chassis ctrl */
+  ERROR_LEVEL_ID      = 0x00A3, /**< upon error, PC error */
+  INFANTRY_STRUCT_ID  = 0x00A4, /**< before start, robot config */
 } infantry_data_id_e;
 
 typedef enum
 {
   BOTTOM_DEVICE        = 0,
-  CHASSIS_GYRO_OFFLINE = 2,
-  CHASSIS_M1_OFFLINE   = 3,
-  CHASSIS_M2_OFFLINE   = 4,
-  CHASSIS_M3_OFFLINE   = 5,
-  CHASSIS_M4_OFFLINE   = 6,
-  REMOTE_CTRL_OFFLINE  = 7,
-  JUDGE_SYS_OFFLINE    = 8,
-  PC_SYS_OFFLINE       = 9,
-  TRIGGER_MOTO_OFFLINE = 12,
-  BULLET_JAM           = 13,
-  CHASSIS_CONFIG_ERR   = 14,
-  ERROR_LIST_LENGTH    = 16,
+  CHASSIS_GYRO_OFFLINE = 1,
+  CHASSIS_M1_OFFLINE   = 2,
+  CHASSIS_M2_OFFLINE   = 3,
+  CHASSIS_M3_OFFLINE   = 4,
+  CHASSIS_M4_OFFLINE   = 5,
+  PC_SYS_OFFLINE       = 6,
+  CHASSIS_CONFIG_ERR   = 7,
+  ERROR_LIST_LENGTH    = 8,
 } err_id_e;
+
+/** @brief  First offline error ID */
+#define ERR_OFFLINE_FIRST CHASSIS_GYRO_OFFLINE
+
+/** @brief  Last offline error ID */
+#define ERR_OFFLINE_LAST CHASSIS_M4_OFFLINE
 
 typedef enum
 {
@@ -95,23 +97,23 @@ typedef enum
 /********** the information send to computer ***********/
 
 /** 
-  * @brief  chassis information
+  * @brief  chassis information [0x10]
   */
 typedef __packed struct
 {
-  uint8_t ctrl_mode;      /* chassis control mode */
-  float   gyro_palstance; /* chassis palstance(degree/s) from gyroscope */
-  float   gyro_angle;     /* chassis angle(degree) relative to ground from gyroscope */
-  float   ecd_palstance;  /* chassis palstance(degree/s) from chassis motor encoder calculated */
-  float   ecd_calc_angle; /* chassis angle(degree) relative to ground from chassis motor encoder calculated */
-  int16_t x_spd;        /* chassis x-axis move speed(mm/s) from chassis motor encoder calculated */
-  int16_t y_spd;        /* chassis y-axis move speed(mm/s) from chassis motor encoder calculated */
-  int32_t x_position;     /* chassis x-axis position(mm) relative to the starting point */
-  int32_t y_position;     /* chassis y-axis position(mm) relative to the starting point */
+  uint8_t ctrl_mode;      /**< chassis control mode */
+  float   gyro_palstance; /**< chassis palstance(degree/s) from gyroscope */
+  float   gyro_angle;     /**< chassis angle(degree) relative to ground from gyroscope */
+  float   ecd_palstance;  /**< chassis palstance(degree/s) from chassis motor encoder calculated */
+  float   ecd_calc_angle; /**< chassis angle(degree) relative to ground from chassis motor encoder calculated */
+  int16_t x_spd;          /**< chassis x-axis move speed(mm/s) from chassis motor encoder calculated */
+  int16_t y_spd;          /**< chassis y-axis move speed(mm/s) from chassis motor encoder calculated */
+  int32_t x_position;     /**< chassis x-axis position(mm) relative to the starting point */
+  int32_t y_position;     /**< chassis y-axis position(mm) relative to the starting point */
 } chassis_info_t;
 
 /** 
-  * @brief  infantry error information
+  * @brief  infantry error information [0x13]
   */
 typedef __packed struct
 {
@@ -120,7 +122,7 @@ typedef __packed struct
 } infantry_err_t;
 
 /** 
-  * @brief  infantry structure config response
+  * @brief  infantry structure config response [0x14]
   */
 typedef __packed struct
 {
@@ -128,7 +130,7 @@ typedef __packed struct
 } config_response_t;
 
 /** 
-  * @brief  bottom software version information
+  * @brief  bottom software version information [0x17]
   */
 typedef __packed struct
 {
@@ -145,7 +147,7 @@ typedef __packed struct
 } chassis_rotate_t;
 
 /** 
-  * @brief  chassis control information
+  * @brief  chassis control information [0xA0]
   */
 typedef __packed struct
 {
@@ -156,7 +158,7 @@ typedef __packed struct
 } chassis_ctrl_t;
 
 /** 
-  * @brief  robot system error level
+  * @brief  robot system error level [0xA3]
   */
 typedef __packed struct
 {
@@ -164,7 +166,7 @@ typedef __packed struct
 } global_err_level_t;
 
 /** 
-  * @brief  infantry structure configuration information
+  * @brief  infantry structure configuration information [0xA4]
   */
 typedef __packed struct
 {
