@@ -34,7 +34,7 @@
 #define COMPUTER_FIFO_BUFLEN (500)
 
 
-/** 
+/**
   * @brief  infantry robot data command id
   */
 typedef enum
@@ -44,7 +44,7 @@ typedef enum
   INFANTRY_ERR_ID     = 0x0013, /**< 50Hz fixed, error info */
   CONFIG_RESPONSE_ID  = 0x0014, /**< 50Hz fixed, config response */
   BOTTOM_VERSION_ID   = 0x0017, /**< 1Hz fixed, fw version */
-  
+
 	/* PC -> Controller */
   CHASSIS_CTRL_ID     = 0x00A0, /**< 50Hz fixed, chassis ctrl */
   ERROR_LEVEL_ID      = 0x00A3, /**< upon error, PC error */
@@ -96,7 +96,7 @@ typedef enum
 
 /********** the information send to computer ***********/
 
-/** 
+/**
   * @brief  chassis information [0x10]
   */
 typedef __packed struct
@@ -112,7 +112,7 @@ typedef __packed struct
   int32_t y_position;     /**< chassis y-axis position(mm) relative to the starting point */
 } chassis_info_t;
 
-/** 
+/**
   * @brief  infantry error information [0x13]
   */
 typedef __packed struct
@@ -121,7 +121,7 @@ typedef __packed struct
   bottom_err_e err[ERROR_LIST_LENGTH];  /* device error list */
 } infantry_err_t;
 
-/** 
+/**
   * @brief  infantry structure config response [0x14]
   */
 typedef __packed struct
@@ -129,7 +129,7 @@ typedef __packed struct
   struct_config_e chassis_config;
 } config_response_t;
 
-/** 
+/**
   * @brief  bottom software version information [0x17]
   */
 typedef __packed struct
@@ -146,7 +146,7 @@ typedef __packed struct
   float   w_spd;      /* rotation speed(degree/s) of chassis */
 } chassis_rotate_t;
 
-/** 
+/**
   * @brief  chassis control information [0xA0]
   */
 typedef __packed struct
@@ -157,7 +157,7 @@ typedef __packed struct
   chassis_rotate_t w_info;    /* rotation control of chassis */
 } chassis_ctrl_t;
 
-/** 
+/**
   * @brief  robot system error level [0xA3]
   */
 typedef __packed struct
@@ -165,7 +165,7 @@ typedef __packed struct
   err_level_e err_level; /* the error level is included in err_level_e enumeration */
 } global_err_level_t;
 
-/** 
+/**
   * @brief  infantry structure configuration information [0xA4]
   */
 typedef __packed struct
@@ -177,7 +177,7 @@ typedef __packed struct
 } infantry_structure_t;
 
 /********* variables **********/
-/** 
+/**
   * @brief  the data structure send to pc
   */
 typedef struct
@@ -188,7 +188,7 @@ typedef struct
   config_response_t structure_config_data;
   version_info_t    version_info_data;
 } send_pc_t;
-/** 
+/**
   * @brief  the data structure receive from pc
   */
 typedef struct
