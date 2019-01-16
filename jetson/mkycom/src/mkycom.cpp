@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <string.h>
 #include <termios.h>
+#include <stdlib.h>
 
 #ifndef MKYCOM_TTY
 #define MKYCOM_TTY "/dev/ttyACM0" // default tty
