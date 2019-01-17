@@ -31,19 +31,19 @@
 #ifndef __CMSISOS_BRIDGE_HDR__
 #define __CMSISOS_BRIDGE_HDR__
 
+#include <pthread.h>
+
 #define osWaitForever (1)
 
 /**
  * @brief Interface to local locks.
- *
- * TODO: implement this
  */
-#define osMutexWait(mutex, timeout) do {} while(0)
+#define osMutexWait(mutex, timeout) pthread_mutex_lock(mutex)
 
-#define osMutexRelease(mutex) do {} while(0)
+#define osMutexRelease(mutex) pthread_mutex_unlock(mutex)
 
-#define osMutexDelete(mutex) do {} while(0)
+#define osMutexDelete(mutex) pthread_mutex_destroy(mutex)
 
-typedef void *osMutexId;
+typedef pthread_mutex_t * osMutexId;
 
 #endif /* __CMSISOS_BRIDGE_HDR__ */
