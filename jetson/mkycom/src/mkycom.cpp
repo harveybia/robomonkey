@@ -21,7 +21,24 @@
 #define MKYCOM_TTY "/dev/ttyACM0" // default tty
 #endif
 
-int tty_fd = 0;
+#define UART_BUFF_SIZE (500)
+
+/* Chassis stats */
+send_pc_t mky_chassis_stats;
+
+static int tty_fd = 0;
+
+/* UART receive buffer */
+static char computer_rx_buf[UART_BUFF_SIZE];
+
+/* For debug */
+int pc_seq            = 0;
+int once_lost_num     = 0;
+int lost_pack_percent = 0;
+
+int pack_num_cnt   = 0;
+int lost_num_sum_t = 0;
+int pack_lost      = 0;
 
 /* ttyUSB serial device helpers */
 static int set_interface_attribs (int fd, int speed, int parity);
@@ -149,8 +166,87 @@ static void set_blocking(int fd, int should_block) {
 // char buf [100];
 // int n = read (fd, buf, sizeof buf);  // read up to 100 characters if ready to read
 
-#define UART_BUFF_SIZE (500)
-char computer_rx_buf[UART_BUFF_SIZE];
+static void data_handle(uint8_t *p_frame) {
+  frame_header_t *p_header = (frame_header_t *)p_frame;
+  memcpy(p_header, p_frame, HEADER_LEN);
+
+  uint16_t data_length = p_header->data_length;
+  uint16_t cmd_id      = *(uint16_t *)(p_frame + HEADER_LEN);
+  uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
+
+  //lost pack monitor
+  pack_num_cnt++;
+  
+  if (pack_num_cnt <= 100)
+  {
+    once_lost_num = p_header->seq - pc_seq - 1;
+    
+    if (once_lost_num < 0)
+    {
+      once_lost_num += 256;
+    }
+    
+    lost_num_sum_t += once_lost_num;
+  }
+  else
+  {
+    lost_pack_percent = lost_num_sum_t;
+    lost_num_sum_t    = 0;
+    pack_num_cnt      = 0;
+  }
+  
+  
+  if (once_lost_num != 0)
+  {
+    pack_lost = 1;
+  }
+  else
+  {
+    pack_lost = 0;
+  }
+  
+  pc_seq = p_header->seq;
+  //end lost pack monitor
+  
+  
+  // taskENTER_CRITICAL();
+  
+  switch (cmd_id)
+  {
+    case CHASSIS_DATA_ID:
+    {
+      memcpy(&mky_chassis_stats.chassis_information, data_addr, data_length);
+      printf("[debug]: received chassis information\n");
+      break; 
+    }
+    
+    case INFANTRY_ERR_ID:
+    {
+      memcpy(&mky_chassis_stats.bottom_error_data, data_addr, data_length);
+      printf("[debug]: received bottom error data\n");
+      break;
+    }
+    
+    case CONFIG_RESPONSE_ID: {
+      memcpy(&mky_chassis_stats.structure_config_data, data_addr, data_length);
+      printf("[debug]: received structure config data\n");
+      break;
+    }
+      // TODO: do something about this state
+    case BOTTOM_VERSION_ID: {
+      memcpy(&mky_chassis_stats.version_info_data, data_addr, data_length);
+      printf("[debug]: received version info data\n");
+      break;
+    }
+
+    default: {
+      break;
+    }
+    
+  }
+  
+  // taskEXIT_CRITICAL();
+}
 
 void read_and_unpack_thread(void *argu) {
   uint8_t byte = 0;
@@ -247,7 +343,7 @@ void read_and_unpack_thread(void *argu) {
             if ( verify_crc16_check_sum(protocol_packet, uint32_t(HEADER_LEN + CMD_LEN + data_len + CRC_LEN)) )
             {
               // Upon successfully decoding a packet, handle it.
-              //data_handle(protocol_packet);
+              data_handle(protocol_packet);
             }
           }
         }break;
