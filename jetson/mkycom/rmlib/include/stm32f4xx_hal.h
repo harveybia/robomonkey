@@ -39,6 +39,6 @@
  *
  * @see https://gcc.gnu.org/onlinedocs/gcc-4.0.4/gcc/Type-Attributes.html
  */
-#define __packed __attribute__((aligned(1)))
+// #define __packed struct __attribute__((__packed__))
 
 #endif /* __STM32F4_BRIDGE_HDR__ */

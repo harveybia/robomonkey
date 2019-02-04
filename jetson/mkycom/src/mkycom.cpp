@@ -18,7 +18,7 @@
 #include <stdlib.h>
 
 #ifndef MKYCOM_TTY
-#define MKYCOM_TTY "/dev/ttyACM0" // default tty
+#define MKYCOM_TTY "/dev/ttyUSB1" // default tty
 #endif
 
 #define UART_BUFF_SIZE (500)
@@ -65,14 +65,13 @@ ssize_t _com_transmit(char *buf, size_t len) {
 }
 
 int mkycom_init(void) {
-  const char *portname = "/dev/ttyUSB0";
 
-  tty_fd = open (portname, O_RDWR | O_NOCTTY | O_SYNC);
+  tty_fd = open (MKYCOM_TTY, O_RDWR | O_NOCTTY | O_SYNC);
   if (tty_fd < 0) {
     unix_error("error opening usbtty");
   }
 
-  set_interface_attribs (tty_fd, B115200, 0);  // set speed to 115,200 bps, 8n1 (no parity)
+  set_interface_attribs (tty_fd, B115200, 0);  // set speed to 921600 bps, 8n1 (no parity)
   set_blocking (tty_fd, 0);                // set no blocking
 
   //write (fd, "hello!\n", 7);           // send 7 character greeting
@@ -174,6 +173,8 @@ static void data_handle(uint8_t *p_frame) {
   uint16_t cmd_id      = *(uint16_t *)(p_frame + HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
 
+  fprintf(stderr, "Handling packet!\n");
+
   //lost pack monitor
   pack_num_cnt++;
   
@@ -217,6 +218,12 @@ static void data_handle(uint8_t *p_frame) {
     {
       memcpy(&mky_chassis_stats.chassis_information, data_addr, data_length);
       printf("[debug]: received chassis information\n");
+
+      chassis_info_t *chinfo = &(mky_chassis_stats.chassis_information);
+      // Handle information coming from chassis
+      fprintf(stderr, "chassis x_spd = %d, y_spd = %d\n",
+        chinfo->x_spd, chinfo->y_spd);
+
       break; 
     }
     
@@ -248,7 +255,7 @@ static void data_handle(uint8_t *p_frame) {
   // taskEXIT_CRITICAL();
 }
 
-void read_and_unpack_thread(void *argu) {
+void *read_and_unpack_thread(void *argu) {
   uint8_t byte = 0;
   int32_t read_len;
   int32_t buff_read_index;
@@ -261,11 +268,18 @@ void read_and_unpack_thread(void *argu) {
   while (1)
   {
     read_len = read(tty_fd, computer_rx_buf, UART_BUFF_SIZE);
+    // fprintf(stderr, "\rRead %d bytes", read_len);
+    fflush(stderr);
     buff_read_index = 0;
 
     while (read_len--)
     {
       byte = computer_rx_buf[buff_read_index++];
+
+      // fprintf(stderr, "%x ", byte);
+      // if (unpack_step != STEP_HEADER_SOF) {
+        // fprintf(stderr, "\nunpack_step = %d", unpack_step);
+      // }
 
       switch(unpack_step)
       {
@@ -356,4 +370,6 @@ void read_and_unpack_thread(void *argu) {
       }
     }
   }
+
+  return NULL;
 }

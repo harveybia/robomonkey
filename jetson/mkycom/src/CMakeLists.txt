@@ -22,4 +22,5 @@ add_executable(mkycom_test ${MKYCOM_TEST_SOURCE})
 target_link_libraries(mkycom_test
   PUBLIC rmlib
   PUBLIC mkycom
+  pthread
 )
