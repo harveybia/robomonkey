@@ -1,11 +1,10 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5)
 project(MKYCOM)
 
-set(MKYCOM_INCLUDE_DIRS "${MKYCOM_SOURCE_DIR}/include")
+# mkycom CMakeList
 
-include_directories(
-  ${MKYCOM_INCLUDE_DIRS}
-)
+add_subdirectory(rmlib)
+include_directories(rmlib/include)
 
 add_subdirectory(src)
 

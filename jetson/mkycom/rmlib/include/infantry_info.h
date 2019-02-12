@@ -99,7 +99,7 @@ typedef enum
 /**
   * @brief  chassis information [0x10]
   */
-typedef __packed struct
+typedef struct __attribute__((__packed__))
 {
   uint8_t ctrl_mode;      /**< chassis control mode */
   float   gyro_palstance; /**< chassis palstance(degree/s) from gyroscope */
@@ -115,7 +115,7 @@ typedef __packed struct
 /**
   * @brief  infantry error information [0x13]
   */
-typedef __packed struct
+typedef struct __attribute__((__packed__))
 {
   bottom_err_e err_sta;                 /* bottom error state */
   bottom_err_e err[ERROR_LIST_LENGTH];  /* device error list */
@@ -124,7 +124,7 @@ typedef __packed struct
 /**
   * @brief  infantry structure config response [0x14]
   */
-typedef __packed struct
+typedef struct __attribute__((__packed__))
 {
   struct_config_e chassis_config;
 } config_response_t;
@@ -132,14 +132,14 @@ typedef __packed struct
 /**
   * @brief  bottom software version information [0x17]
   */
-typedef __packed struct
+typedef struct __attribute__((__packed__))
 {
   uint8_t num[4];
 } version_info_t;
 
 /********** the information from computer **********/
 
-typedef __packed struct
+typedef struct __attribute__((__packed__))
 {
   int16_t x_offset;   /* offset(mm) relative to the x-axis of the chassis center */
   int16_t y_offset;   /* offset(mm) relative to the y-axis of the chassis center */
@@ -149,7 +149,7 @@ typedef __packed struct
 /**
   * @brief  chassis control information [0xA0]
   */
-typedef __packed struct
+typedef struct __attribute__((__packed__))
 {
   uint8_t          ctrl_mode; /* chassis control mode */
   int16_t          x_spd;     /* x-axis move speed(mm/s) of chassis */
@@ -160,7 +160,7 @@ typedef __packed struct
 /**
   * @brief  robot system error level [0xA3]
   */
-typedef __packed struct
+typedef struct __attribute__((__packed__))
 {
   err_level_e err_level; /* the error level is included in err_level_e enumeration */
 } global_err_level_t;
@@ -168,7 +168,7 @@ typedef __packed struct
 /**
   * @brief  infantry structure configuration information [0xA4]
   */
-typedef __packed struct
+typedef struct __attribute__((__packed__))
 {
   struct_config_e  chassis_config;  /* chassis structure config state */
   uint16_t         wheel_perimeter; /* the perimeter(mm) of wheel */

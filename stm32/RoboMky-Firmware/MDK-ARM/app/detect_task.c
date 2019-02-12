@@ -36,7 +36,7 @@ UBaseType_t detect_stack_surplus;
 global_err_t g_err;
 
 /* detect task static parameter */
-static offline_dev_t offline_dev[TRIGGER_MOTO_OFFLINE + 1];
+static offline_dev_t offline_dev[ERR_OFFLINE_LAST + 1];
 /**
   * @brief     initialize detector error_list
   * @usage     used before detect loop in detect_task() function
@@ -50,7 +50,7 @@ void global_err_detector_init(void)
   /* initialize device error type and offline timeout value */
   for (uint8_t i = CHASSIS_GYRO_OFFLINE; i < ERROR_LIST_LENGTH; i++)
   {
-    if (i <= TRIGGER_MOTO_OFFLINE)
+    if (i <= ERR_OFFLINE_LAST)
     {
       offline_dev[i].set_timeout = 500; //ms
       offline_dev[i].last_time   = 0;
@@ -59,12 +59,7 @@ void global_err_detector_init(void)
       g_err.list[i].dev  = &offline_dev[i];
       g_err.list[i].type = DEV_OFFLINE;
     }
-    else if (i == BULLET_JAM)
-    {
-      g_err.list[i].dev  = NULL;
-      g_err.list[i].type = DEV_RUNNING_ERR;
-    }
-    else if (i <= BULLET_JAM)
+    else if (i <= CHASSIS_CONFIG_ERR)
     {
       g_err.list[i].dev  = NULL;
       g_err.list[i].type = SYS_CONFIG_ERR;
@@ -74,18 +69,10 @@ void global_err_detector_init(void)
   }
     
   /* initialize device error detect priority and enable byte */
-  
-  g_err.list[REMOTE_CTRL_OFFLINE].err_exist = 0;
-  g_err.list[REMOTE_CTRL_OFFLINE].pri       = 10;  //max priority
-  g_err.list[REMOTE_CTRL_OFFLINE].enable    = 1;
 
   g_err.list[CHASSIS_GYRO_OFFLINE].err_exist = 0;
   g_err.list[CHASSIS_GYRO_OFFLINE].pri       = 7;
   g_err.list[CHASSIS_GYRO_OFFLINE].enable    = 1;
-
-  g_err.list[TRIGGER_MOTO_OFFLINE].err_exist = 0;
-  g_err.list[TRIGGER_MOTO_OFFLINE].pri       = 6;
-  g_err.list[TRIGGER_MOTO_OFFLINE].enable    = 1;
 
   for (int i = 0; i < 4; i++)
   {
@@ -93,10 +80,6 @@ void global_err_detector_init(void)
     g_err.list[CHASSIS_M1_OFFLINE + i].pri       = 2 + i; //2,3,4,5
     g_err.list[CHASSIS_M1_OFFLINE + i].enable    = 1;
   }
-  
-  g_err.list[JUDGE_SYS_OFFLINE].err_exist = 0;
-  g_err.list[JUDGE_SYS_OFFLINE].pri       = 1;
-  g_err.list[JUDGE_SYS_OFFLINE].enable    = 1;
   
   g_err.list[PC_SYS_OFFLINE].err_exist    = 0;
   g_err.list[PC_SYS_OFFLINE].pri          = 1;
@@ -186,7 +169,7 @@ static void module_offline_detect(void)
 {
   int max_priority = 0;
   int err_cnt      = 0;
-  for (uint8_t id = CHASSIS_GYRO_OFFLINE; id <= TRIGGER_MOTO_OFFLINE; id++)
+  for (uint8_t id = ERR_OFFLINE_FIRST; id <= ERR_OFFLINE_LAST; id++)
   {
     g_err.list[id].dev->delta_time = HAL_GetTick() - g_err.list[id].dev->last_time;
     
@@ -228,23 +211,6 @@ static void module_offline_callback(void)
       if (g_err.err_count == 1
           || g_err.err_count == 7
           || g_err.err_count == 13)
-      {
-        LED_R_ON;
-        g_err.beep_ctrl = g_err.beep_tune/2;
-      }
-      else
-      {
-        LED_R_OFF;
-        g_err.beep_ctrl = 0;
-      }
-    }break;
-
-    case TRIGGER_MOTO_OFFLINE:
-    {
-      if (g_err.err_count == 1
-          || g_err.err_count == 7
-          || g_err.err_count == 13
-          || g_err.err_count == 19)
       {
         LED_R_ON;
         g_err.beep_ctrl = g_err.beep_tune/2;
