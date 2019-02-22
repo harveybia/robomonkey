@@ -1,0 +1,8 @@
+prefix=/home/tiffany/ros_catkin_ws/install
+
+Name: ddynamic_reconfigure
+Description: Description of ddynamic_reconfigure
+Version: 0.0.6
+Cflags: -I/home/tiffany/ros_catkin_ws/install/include
+Libs: -L/home/tiffany/ros_catkin_ws/install/lib -lddynamic_reconfigure
+Requires: 

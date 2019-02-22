@@ -1,0 +1,8 @@
+prefix=/home/tiffany/ros_catkin_ws/devel
+
+Name: motor_control
+Description: Description of motor_control
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/tiffany/ros_catkin_ws/devel/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/tiffany/Yr4/robomonkey/ros/devel
+
+Name: camera_calibration
+Description: Description of camera_calibration
+Version: 1.12.23
+Cflags: 
+Libs: -L/home/tiffany/Yr4/robomonkey/ros/devel/lib 
+Requires: 

@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="task_control" type="simple_control" name="simple_control" clear_params="true" output="screen" respawn="true">
+      <!-- INPUT TOPICS -->
+      <!-- OUTPUT TOPICS -->
+    </node>
+</launch>

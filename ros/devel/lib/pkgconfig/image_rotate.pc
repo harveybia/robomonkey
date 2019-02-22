@@ -1,0 +1,8 @@
+prefix=/home/tiffany/Yr4/robomonkey/ros/devel
+
+Name: image_rotate
+Description: Description of image_rotate
+Version: 1.12.23
+Cflags: -I/home/tiffany/Yr4/robomonkey/ros/devel/include
+Libs: -L/home/tiffany/Yr4/robomonkey/ros/devel/lib 
+Requires: 

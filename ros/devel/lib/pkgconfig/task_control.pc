@@ -1,0 +1,8 @@
+prefix=/home/tiffany/Yr4/robomonkey/ros/devel
+
+Name: task_control
+Description: Description of task_control
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/tiffany/Yr4/robomonkey/ros/devel/lib -ltask_control
+Requires: apriltags2_ros realsense2_camera roscpp rospy geometry_msgs std_msgs
