@@ -79,13 +79,20 @@ void chassis_task(void const *argu)
       chassis_stop_handler();
     }break;
   }
+	
+	
+	// XXX: test override
+	//chassis.vx = 50; // mms-1
+	//chassis.vy = 0;
+	//chassis.vw = 0;
 
   mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_spd_ref);
 
   for (int i = 0; i < 4; i++)
   {
-    chassis.current[i] = pid_calc(&pid_spd[i], chassis.wheel_spd_fdb[i], chassis.wheel_spd_ref[i]);
-  }
+    //chassis.current[i] = pid_calc(&pid_spd[i], chassis.wheel_spd_fdb[i], chassis.wheel_spd_ref[i]);
+		chassis.current[i] = chassis.wheel_spd_ref[i]; // disable PID for testing
+	}
   
   memcpy(glb_cur.chassis_cur, chassis.current, sizeof(chassis.current));
   osSignalSet(can_msg_send_task_t, CHASSIS_MOTOR_MSG_SEND);
