@@ -1,8 +1,0 @@
-prefix=/home/tiffany/ros_catkin_ws/install
-
-Name: image_rotate
-Description: Description of image_rotate
-Version: 1.12.23
-Cflags: -I/home/tiffany/ros_catkin_ws/install/include
-Libs: -L/home/tiffany/ros_catkin_ws/install/lib 
-Requires: 
