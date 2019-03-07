@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
   fprintf(stderr, "Thread started\n");
 
   while (1) {
-    mkycom_send_chassis_command(10, 10);
+    mkycom_send_chassis_command(700, 700);
     sleep(1);
   }
   

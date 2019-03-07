@@ -1,14 +1,15 @@
 cmake_minimum_required(VERSION 3.5)
 project(MKYCOM)
 
+# mkycom CMakeList
 set(MKYCOM_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/include")
 
 set(MKYCOM_SOURCE
-  src/mkycom.cpp
+  "${CMAKE_CURRENT_LIST_DIR}/src/mkycom.cpp"
 )
 
 set(MKYCOM_TEST_SOURCE
-  src/mkycom_test.cpp
+  "${CMAKE_CURRENT_LIST_DIR}/src/mkycom_test.cpp"
 )
 
 include_directories(
@@ -28,8 +29,13 @@ target_link_libraries(mkycom_test
   pthread
 )
 
+message(${RMLIB_INCLUDE_DIRS})
+
 # Install to system
-set_target_properties(mkycom PROPERTIES PUBLIC_HEADER "${MKYCOM_INCLUDE_DIRS}/mkycom.h")
+set_target_properties(mkycom
+	PROPERTIES PUBLIC_HEADER "${MKYCOM_INCLUDE_DIRS}/mkycom.h"
+)
+
 install(TARGETS mkycom
 	DESTINATION lib
 	PUBLIC_HEADER DESTINATION include
@@ -37,4 +43,3 @@ install(TARGETS mkycom
 
 # mkycom CMakeList
 add_subdirectory(rmlib)
-include_directories(rmlib/include)
