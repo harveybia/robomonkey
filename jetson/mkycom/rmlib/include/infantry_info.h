@@ -70,6 +70,14 @@ typedef enum
 /** @brief  Last offline error ID */
 #define ERR_OFFLINE_LAST CHASSIS_M4_OFFLINE
 
+/**@brief  Chassis modes */
+typedef enum
+{
+  CHASSIS_RELAX          = 0, /**< Chassis no power */
+  CHASSIS_STOP           = 1, /**< Chassis is stopped/breaking */
+  CHASSIS_MOVING         = 4, /**< Chassis is moving */
+} chassis_mode_e;
+
 typedef enum
 {
   DEVICE_NORMAL = 0,

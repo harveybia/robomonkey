@@ -8,8 +8,8 @@ endif()
 set(CMAKE_CXX_STANDARD 11)
 
 
-set(MKYCOM_INCLUDE_DIRS "${MKYCOM_SOURCE_DIR}/include")
-set(RMLIB_INCLUDE_DIRS "${MKYCOM_SOURCE_DIR}/rmlib/include")
+set(MKYCOM_INCLUDE_DIRS "mkycom/include")
+set(RMLIB_INCLUDE_DIRS "mkycom/rmlib/include")
 
 include_directories(
   ${RMLIB_INCLUDE_DIRS}

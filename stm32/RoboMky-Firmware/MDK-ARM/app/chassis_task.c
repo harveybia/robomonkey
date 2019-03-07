@@ -56,17 +56,22 @@ void chassis_task(void const *argu)
   chassis_time_ms = HAL_GetTick() - chassis_time_last;
   chassis_time_last = HAL_GetTick();
   
-//    get_chassis_info();
+	get_chassis_info();
 //    get_chassis_mode();
 
   switch (chassis.ctrl_mode)
   {
-		// TODO: this handles chassis control modes, which we should redesign
     case CHASSIS_MOVING:
     {
-      chassis.vx = 0;
-      chassis.vy = 0;
-      chassis.vw = 0;
+			int16_t l_speed = pc_recv_mesg.chassis_control_data.x_spd;
+			int16_t r_speed = pc_recv_mesg.chassis_control_data.y_spd;
+			
+			// L: 1, 3, -
+			// R: 0, 2, +
+      chassis.wheel_spd_ref[0] = (r_speed);
+			chassis.wheel_spd_ref[1] = - (l_speed);
+			chassis.wheel_spd_ref[2] = (r_speed);
+			chassis.wheel_spd_ref[3] = - (l_speed);
     }break;
     
     case CHASSIS_STOP:
@@ -80,12 +85,15 @@ void chassis_task(void const *argu)
     }break;
   }
 
-  mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_spd_ref);
-
   for (int i = 0; i < 4; i++)
   {
-    chassis.current[i] = pid_calc(&pid_spd[i], chassis.wheel_spd_fdb[i], chassis.wheel_spd_ref[i]);
-  }
+    chassis.current[i] = pid_calc(
+			&pid_spd[i],
+			chassis.wheel_spd_fdb[i],
+			chassis.wheel_spd_ref[i]
+		);
+		//chassis.current[i] = chassis.wheel_spd_ref[i]; // disable PID for testing
+	}
   
   memcpy(glb_cur.chassis_cur, chassis.current, sizeof(chassis.current));
   osSignalSet(can_msg_send_task_t, CHASSIS_MOTOR_MSG_SEND);
@@ -96,9 +104,10 @@ void chassis_task(void const *argu)
 
 void chassis_stop_handler(void)
 {
-  chassis.vy = 0;
-  chassis.vx = 0;
-  chassis.vw = 0;
+  chassis.wheel_spd_ref[0] = 0;
+	chassis.wheel_spd_ref[1] = 0;
+	chassis.wheel_spd_ref[2] = 0;
+	chassis.wheel_spd_ref[3] = 0;
 }
 
 /**
@@ -181,7 +190,7 @@ void chassis_param_init(void)
 #else
   for (int k = 0; k < 4; k++)
   {
-    PID_struct_init(&pid_spd[k], POSITION_PID, 10000, 500, 4.5f, 0.05, 0);
+    PID_struct_init(&pid_spd[k], POSITION_PID, 10000, 500, 8.0f, 1.0, 1.0);
   }
 #endif
   

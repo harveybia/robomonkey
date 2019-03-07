@@ -9,8 +9,8 @@ set(MKYCOM_TEST_SOURCE
 )
 
 include_directories(
-  ${MKYCOM_INCLUDE_DIRS}
-  ${RMLIB_INCLUDE_DIRS}
+  "../include"
+  "../../rmlib/include"
 )
 
 # MKYCOM Communication Library
