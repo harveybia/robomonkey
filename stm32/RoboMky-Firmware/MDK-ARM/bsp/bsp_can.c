@@ -214,7 +214,12 @@ void gyro_device_init(void)
 
 /**
   * @brief  send calculated current to motor
-  * @param  3510 motor ESC id
+  * ESC Model: RoboMaster 820R
+  * https://www.robomaster.com/zh-CN/products/components/detail/136
+  * 
+  * 3510 motor ESC id uplink is 0x200
+  * Data format can be seen in documentation
+  * Motors configured: 0x201, 0x202, 0x203, 0x204
   */
 void send_chassis_cur(int16_t iq1, int16_t iq2, int16_t iq3, int16_t iq4)
 {

@@ -246,6 +246,7 @@ void communicate_param_init(void)
   pc_send_mesg.version_info_data.num[1] = 0;
   pc_send_mesg.version_info_data.num[2] = 1;
   pc_send_mesg.version_info_data.num[3] = 8;
+	
 }
 
 void data_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, uint8_t sof)
