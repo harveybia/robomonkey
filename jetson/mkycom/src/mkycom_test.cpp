@@ -2,6 +2,7 @@
 
 #include <pthread.h>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -28,9 +29,14 @@ int main(int argc, char **argv) {
   pthread_t comm_thread;
   fprintf(stderr, "Before thread\n");
 
-  pthread_create(&comm_thread, NULL, read_and_unpack_thread, NULL);
+  pthread_create(&comm_thread, NULL, mkycom_recv_thread, NULL);
 
   fprintf(stderr, "Thread started\n");
+
+  while (1) {
+    mkycom_send_chassis_command(10, 10);
+    sleep(1);
+  }
   
   pthread_join(comm_thread, NULL);
 

@@ -115,9 +115,9 @@ void pc_data_handler(uint8_t *p_frame)
   {
     case CHASSIS_CTRL_ID:
     {
+			// command to chassis
       memcpy(&pc_recv_mesg.chassis_control_data, data_addr, data_length);
       chassis.ctrl_mode = (chassis_mode_e)pc_recv_mesg.chassis_control_data.ctrl_mode;
-			//chassis.ctrl_mode = CHASSIS_STOP;
       
     }
     break;

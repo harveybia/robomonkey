@@ -16,6 +16,7 @@
 #include <string.h>
 #include <termios.h>
 #include <stdlib.h>
+#include <time.h>
 
 #ifndef MKYCOM_TTY
 #define MKYCOM_TTY "/dev/ttyUSB0" // default tty
@@ -156,7 +157,7 @@ static void set_blocking(int fd, int should_block) {
   * @usage     data_pack_handle(CHASSIS_CTRL_ID, &chassis_control_data, sizeof(chassis_ctrl_t))
   */
 
-void data_pack_handle(uint16_t cmd_id, uint8_t *p_data, uint16_t len)
+int data_pack_handle(uint16_t cmd_id, uint8_t *p_data, uint16_t len)
 {
   memset(computer_tx_buf, 0, COMPUTER_FRAME_BUFLEN);
   frame_header_t *p_header = (frame_header_t*)computer_tx_buf;
@@ -169,27 +170,9 @@ void data_pack_handle(uint16_t cmd_id, uint8_t *p_data, uint16_t len)
   
   memcpy(&computer_tx_buf[HEADER_LEN + CMD_LEN], p_data, len);
   append_crc16_check_sum(computer_tx_buf, HEADER_LEN + CMD_LEN + len + CRC_LEN);
+
+  return sizeof(frame_header_t) + CMD_LEN + len + CRC_LEN;
 }
-
-// ...
-// char *portname = "/dev/ttyUSB1"
-//  ...
-// int fd = open (portname, O_RDWR | O_NOCTTY | O_SYNC);
-// if (fd < 0)
-// {
-//   error_message ("error %d opening %s: %s", errno, portname, strerror (errno));
-//   return;
-// }
-
-// set_interface_attribs (fd, B115200, 0);  // set speed to 115,200 bps, 8n1 (no parity)
-// set_blocking (fd, 0);                // set no blocking
-
-// write (fd, "hello!\n", 7);           // send 7 character greeting
-
-// usleep ((7 + 25) * 100);             // sleep enough to transmit the 7 plus
-//                                      // receive 25:  approx 100 uS per char transmit
-// char buf [100];
-// int n = read (fd, buf, sizeof buf);  // read up to 100 characters if ready to read
 
 static void data_handle(uint8_t *p_frame) {
   frame_header_t *p_header = (frame_header_t *)p_frame;
@@ -198,8 +181,6 @@ static void data_handle(uint8_t *p_frame) {
   uint16_t data_length = p_header->data_length;
   uint16_t cmd_id      = *(uint16_t *)(p_frame + HEADER_LEN);
   uint8_t *data_addr   = p_frame + HEADER_LEN + CMD_LEN;
-
-  fprintf(stderr, "Handling packet!\n");
 
   //lost pack monitor
   pack_num_cnt++;
@@ -242,26 +223,24 @@ static void data_handle(uint8_t *p_frame) {
   {
     case CHASSIS_DATA_ID:
     {
+      // received chassis information
       memcpy(&mky_chassis_stats.chassis_information, data_addr, data_length);
-      printf("[debug]: received chassis information\n");
 
       chassis_info_t *chinfo = &(mky_chassis_stats.chassis_information);
+
+      time_t now;
+      struct tm *tm;
+
+      now = time(0);
+      if ((tm = localtime (&now)) == NULL) {
+          fprintf(stderr, "[error]: error extracting time\n");
+          return;
+      }
+
       // Handle information coming from chassis
-      fprintf(stderr, "chassis x_spd = %d, y_spd = %d\n",
+      printf("[%02d:%02d:%02d]: chassis x_spd = %d, y_spd = %d      \r",
+        tm->tm_hour, tm->tm_min, tm->tm_sec,
         chinfo->x_spd, chinfo->y_spd);
-
-      fprintf(stderr, "sending command back to chassis\n");
-      chassis_ctrl_t control;
-      control.ctrl_mode = CHASSIS_MOVING;
-      control.x_spd = 10;
-      control.y_spd = 10;
-      control.w_info.x_offset = 0;
-      control.w_info.y_offset = 0;
-      control.w_info.w_spd = 0;
-
-      data_pack_handle(CHASSIS_CTRL_ID, (uint8_t *)&control, sizeof(control));
-      // XXX: this transmits unnecessary bytes, make efficient later
-      mkycom_transmit((char *)computer_tx_buf, COMPUTER_FRAME_BUFLEN);
 
       break; 
     }
@@ -269,19 +248,19 @@ static void data_handle(uint8_t *p_frame) {
     case INFANTRY_ERR_ID:
     {
       memcpy(&mky_chassis_stats.bottom_error_data, data_addr, data_length);
-      printf("[debug]: received bottom error data\n");
+      fprintf(stderr, "[error]: received bottom error data\n");
       break;
     }
     
     case CONFIG_RESPONSE_ID: {
       memcpy(&mky_chassis_stats.structure_config_data, data_addr, data_length);
-      printf("[debug]: received structure config data\n");
+      fprintf(stderr, "[info]: received structure config data\n");
       break;
     }
       // TODO: do something about this state
     case BOTTOM_VERSION_ID: {
       memcpy(&mky_chassis_stats.version_info_data, data_addr, data_length);
-      printf("[debug]: received version info data\n");
+      fprintf(stderr, "[info]: received version info data\n");
       break;
     }
 
@@ -294,7 +273,7 @@ static void data_handle(uint8_t *p_frame) {
   // taskEXIT_CRITICAL();
 }
 
-void *read_and_unpack_thread(void *argu) {
+void *mkycom_recv_thread(void *argu) {
   uint8_t byte = 0;
   int32_t read_len;
   int32_t buff_read_index;
@@ -411,4 +390,18 @@ void *read_and_unpack_thread(void *argu) {
   }
 
   return NULL;
+}
+
+void mkycom_send_chassis_command(int16_t l_speed, int16_t r_speed) {
+  chassis_ctrl_t control;
+  control.ctrl_mode = CHASSIS_MOVING;
+  control.x_spd = l_speed;
+  control.y_spd = r_speed;
+  control.w_info.x_offset = 0;
+  control.w_info.y_offset = 0;
+  control.w_info.w_spd = 0;
+
+  int packed_size = data_pack_handle(
+    CHASSIS_CTRL_ID, (uint8_t *)&control, sizeof(control));
+  mkycom_transmit((char *)computer_tx_buf, packed_size);
 }

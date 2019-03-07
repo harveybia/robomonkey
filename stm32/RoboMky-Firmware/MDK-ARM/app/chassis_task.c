@@ -61,12 +61,17 @@ void chassis_task(void const *argu)
 
   switch (chassis.ctrl_mode)
   {
-		// TODO: this handles chassis control modes, which we should redesign
     case CHASSIS_MOVING:
     {
-      chassis.vx = 0;
-      chassis.vy = 0;
-      chassis.vw = 0;
+			int16_t l_speed = pc_recv_mesg.chassis_control_data.x_spd;
+			int16_t r_speed = pc_recv_mesg.chassis_control_data.y_spd;
+			
+			// L: 1, 3, -
+			// R: 0, 2, +
+      chassis.wheel_spd_ref[0] = (r_speed);
+			chassis.wheel_spd_ref[1] = - (l_speed);
+			chassis.wheel_spd_ref[2] = (r_speed);
+			chassis.wheel_spd_ref[3] = - (l_speed);
     }break;
     
     case CHASSIS_STOP:
@@ -79,25 +84,15 @@ void chassis_task(void const *argu)
       chassis_stop_handler();
     }break;
   }
-	
-	
-	// XXX: test override
-	chassis.vx = 50; // mms-1
-	chassis.vy = 50;
-	chassis.vw = 0;
-
-  mecanum_calc(chassis.vx, chassis.vy, chassis.vw, chassis.wheel_spd_ref);
-	
-	chassis.wheel_spd_ref[0] = 700;
-	chassis.wheel_spd_ref[1] = -700;
-	chassis.wheel_spd_ref[2] = 700;
-	chassis.wheel_spd_ref[3] = -700;
 
   for (int i = 0; i < 4; i++)
   {
-    chassis.current[i] = pid_calc(&pid_spd[i], chassis.wheel_spd_fdb[i], chassis.wheel_spd_ref[i]);
+    chassis.current[i] = pid_calc(
+			&pid_spd[i],
+			chassis.wheel_spd_fdb[i],
+			chassis.wheel_spd_ref[i]
+		);
 		//chassis.current[i] = chassis.wheel_spd_ref[i]; // disable PID for testing
-		//chassis.current[i] = 1200;
 	}
   
   memcpy(glb_cur.chassis_cur, chassis.current, sizeof(chassis.current));
@@ -109,9 +104,10 @@ void chassis_task(void const *argu)
 
 void chassis_stop_handler(void)
 {
-  chassis.vy = 0;
-  chassis.vx = 0;
-  chassis.vw = 0;
+  chassis.wheel_spd_ref[0] = 0;
+	chassis.wheel_spd_ref[1] = 0;
+	chassis.wheel_spd_ref[2] = 0;
+	chassis.wheel_spd_ref[3] = 0;
 }
 
 /**

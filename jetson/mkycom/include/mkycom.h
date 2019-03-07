@@ -26,11 +26,9 @@ typedef enum {
 
 int mkycom_init(void);
 
-/*TODO: example functions, not official API. */
-ssize_t mkycom_receive(char *buf, size_t len);
-ssize_t mkycom_transmit(char *buf, size_t len);
+void mkycom_send_chassis_command(int16_t l_speed, int16_t r_speed);
 
-void *read_and_unpack_thread(void *argu);
+void *mkycom_recv_thread(void *argu);
 
 extern send_pc_t mky_chassis_stats;
 
