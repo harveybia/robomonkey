@@ -18,10 +18,11 @@
 #include <stdlib.h>
 
 #ifndef MKYCOM_TTY
-#define MKYCOM_TTY "/dev/ttyUSB1" // default tty
+#define MKYCOM_TTY "/dev/ttyUSB0" // default tty
 #endif
 
 #define UART_BUFF_SIZE (500)
+#define COMPUTER_FRAME_BUFLEN UART_BUFF_SIZE
 
 /* Chassis stats */
 send_pc_t mky_chassis_stats;
@@ -29,7 +30,10 @@ send_pc_t mky_chassis_stats;
 static int tty_fd = 0;
 
 /* UART receive buffer */
-static char computer_rx_buf[UART_BUFF_SIZE];
+static uint8_t computer_rx_buf[UART_BUFF_SIZE];
+
+/* UART transmit buffer */
+static uint8_t computer_tx_buf[COMPUTER_FRAME_BUFLEN];
 
 /* For debug */
 int pc_seq            = 0;
@@ -144,6 +148,28 @@ static void set_blocking(int fd, int should_block) {
   }
 }
 
+/**
+  * @brief     pack data to bottom device
+  * @param[in] cmd_id:  command id of data
+  * @param[in] *p_data: pointer to the data to be sent
+  * @param[in] len:     the data length
+  * @usage     data_pack_handle(CHASSIS_CTRL_ID, &chassis_control_data, sizeof(chassis_ctrl_t))
+  */
+
+void data_pack_handle(uint16_t cmd_id, uint8_t *p_data, uint16_t len)
+{
+  memset(computer_tx_buf, 0, COMPUTER_FRAME_BUFLEN);
+  frame_header_t *p_header = (frame_header_t*)computer_tx_buf;
+  
+  p_header->sof          = UP_REG_ID;
+  p_header->data_length  = len;
+  
+  memcpy(&computer_tx_buf[HEADER_LEN], (uint8_t*)&cmd_id, CMD_LEN);
+  append_crc8_check_sum(computer_tx_buf, HEADER_LEN);
+  
+  memcpy(&computer_tx_buf[HEADER_LEN + CMD_LEN], p_data, len);
+  append_crc16_check_sum(computer_tx_buf, HEADER_LEN + CMD_LEN + len + CRC_LEN);
+}
 
 // ...
 // char *portname = "/dev/ttyUSB1"
@@ -223,6 +249,19 @@ static void data_handle(uint8_t *p_frame) {
       // Handle information coming from chassis
       fprintf(stderr, "chassis x_spd = %d, y_spd = %d\n",
         chinfo->x_spd, chinfo->y_spd);
+
+      fprintf(stderr, "sending command back to chassis\n");
+      chassis_ctrl_t control;
+      control.ctrl_mode = CHASSIS_MOVING;
+      control.x_spd = 10;
+      control.y_spd = 10;
+      control.w_info.x_offset = 0;
+      control.w_info.y_offset = 0;
+      control.w_info.w_spd = 0;
+
+      data_pack_handle(CHASSIS_CTRL_ID, (uint8_t *)&control, sizeof(control));
+      // XXX: this transmits unnecessary bytes, make efficient later
+      mkycom_transmit((char *)computer_tx_buf, COMPUTER_FRAME_BUFLEN);
 
       break; 
     }
