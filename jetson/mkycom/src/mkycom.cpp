@@ -18,10 +18,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#ifndef MKYCOM_TTY
-#define MKYCOM_TTY "/dev/ttyUSB0" // default tty
-#endif
-
 #define UART_BUFF_SIZE (500)
 #define COMPUTER_FRAME_BUFLEN UART_BUFF_SIZE
 
@@ -54,7 +50,6 @@ static ssize_t _com_transmit(char *buf, size_t len);
 
 static void unix_error(const char *msg) {
   printf("%s: %s\n", strerror(errno), msg);
-  exit(errno);
 }
 
 ssize_t _com_receive(char *buf, size_t len) {
@@ -69,22 +64,17 @@ ssize_t _com_transmit(char *buf, size_t len) {
   return tx_len;
 }
 
-int mkycom_init(void) {
+int mkycom_init(char *tty_path) {
 
-  tty_fd = open (MKYCOM_TTY, O_RDWR | O_NOCTTY | O_SYNC);
+  tty_fd = open (tty_path, O_RDWR | O_NOCTTY | O_SYNC);
   if (tty_fd < 0) {
-    unix_error("error opening usbtty");
+    unix_error("error opening usbtty, check supplied tty_path");
+    return tty_fd;
   }
 
   set_interface_attribs (tty_fd, B115200, 0);  // set speed to 921600 bps, 8n1 (no parity)
   set_blocking (tty_fd, 0);                // set no blocking
-
-  //write (fd, "hello!\n", 7);           // send 7 character greeting
-
-  //usleep ((7 + 25) * 100);             // sleep enough to transmit the 7 plus
-  //                                     // receive 25:  approx 100 uS per char transmit
-  //char buf [100];
-  //int n = read (fd, buf, sizeof buf);  // read up to 100 characters if ready to read
+  
   return 0;
 }
 
