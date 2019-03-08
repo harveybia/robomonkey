@@ -1,3 +1,15 @@
 [submodule "lib/min"]
 	path = lib/min
 	url = https://github.com/harveybia/min
+[submodule "ros/src/realsense"]
+	path = ros/src/realsense
+	url = https://github.com/intel-ros/realsense.git
+[submodule "ros/src/apriltags2_ros"]
+	path = ros/src/apriltags2_ros
+	url = https://github.com/dmalyuta/apriltags2_ros.git
+[submodule "ros/src/image_pipeline"]
+	path = ros/src/image_pipeline
+	url = https://github.com/ros-perception/image_pipeline.git
+[submodule "ros/src/usb_cam"]
+	path = ros/src/usb_cam
+	url = https://github.com/ros-drivers/usb_cam.git

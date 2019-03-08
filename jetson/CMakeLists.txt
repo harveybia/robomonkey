@@ -9,4 +9,8 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(RMLIB_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/mkycom/rmlib/include")
 
+set(CMAKE_DEST
+	lib
+)
+
 add_subdirectory(mkycom)

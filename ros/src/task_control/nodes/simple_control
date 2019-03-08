@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+
+from task_control import simple_control
+
+if __name__ == '__main__':
+    simple_control.main()
