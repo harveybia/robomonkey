@@ -6,8 +6,17 @@
 
 using namespace std;
 
+void print_usage(void) {
+  printf("usage: mkycom_test tty_path\n");
+}
+
 int main(int argc, char **argv) {
-  int status = mkycom_init();
+  if (argc < 2) {
+    print_usage();
+    return -1;
+  }
+
+  int status = mkycom_init(argv[1]);
   if (status < 0) {
     cout << "failed to init com library, check connection." << endl;
     return -1;

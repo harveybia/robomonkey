@@ -24,7 +24,7 @@ typedef enum {
   COM_TIMEOUT,  /**< Timeout */
 } MKYCOM_Status;
 
-int mkycom_init(void);
+int mkycom_init(char *tty_path);
 
 void mkycom_send_chassis_command(int16_t l_speed, int16_t r_speed);
 
