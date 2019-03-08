@@ -1,3 +1,6 @@
 [submodule "lib/min"]
 	path = lib/min
 	url = https://github.com/harveybia/min
+[submodule "ros/src/realsense"]
+	path = ros/src/realsense
+	url = https://github.com/intel-ros/realsense.git
