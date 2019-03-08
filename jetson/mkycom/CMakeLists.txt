@@ -29,16 +29,20 @@ target_link_libraries(mkycom_test
   pthread
 )
 
-message(${RMLIB_INCLUDE_DIRS})
-
 # Install to system
 set_target_properties(mkycom
 	PROPERTIES PUBLIC_HEADER "${MKYCOM_INCLUDE_DIRS}/mkycom.h"
 )
 
 install(TARGETS mkycom
+	EXPORT mkycom
 	DESTINATION lib
 	PUBLIC_HEADER DESTINATION include
+)
+
+install(FILES mkycom-config.cmake DESTINATION ${CMAKE_DEST})
+install(EXPORT mkycom
+	DESTINATION ${CMAKE_DEST}
 )
 
 # mkycom CMakeList

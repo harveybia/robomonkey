@@ -19,6 +19,12 @@ set_target_properties(rmlib
 )
 
 install(TARGETS rmlib
+	EXPORT rmlib
 	DESTINATION lib
 	PUBLIC_HEADER DESTINATION include
+)
+
+install(FILES rmlib-config.cmake DESTINATION ${CMAKE_DEST})
+install(EXPORT rmlib
+	DESTINATION ${CMAKE_DEST}
 )
