@@ -4,3 +4,6 @@
 [submodule "ros/src/realsense"]
 	path = ros/src/realsense
 	url = https://github.com/intel-ros/realsense.git
+[submodule "ros/src/apriltags2_ros"]
+	path = ros/src/apriltags2_ros
+	url = https://github.com/dmalyuta/apriltags2_ros.git
