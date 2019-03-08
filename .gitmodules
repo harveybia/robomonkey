@@ -7,3 +7,6 @@
 [submodule "ros/src/apriltags2_ros"]
 	path = ros/src/apriltags2_ros
 	url = https://github.com/dmalyuta/apriltags2_ros.git
+[submodule "ros/src/image_pipeline"]
+	path = ros/src/image_pipeline
+	url = https://github.com/ros-perception/image_pipeline.git
