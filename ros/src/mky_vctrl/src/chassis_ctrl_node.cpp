@@ -32,11 +32,12 @@ int main(int argc, char **argv) {
 
     if (argc < 2) {
         print_usage();
+        ROS_FATAL("[param]: check param usage");
         return -1;
     }
 
     if (mkycom_init(argv[1]) < 0) {
-        printf("[failed]: mkycom_init()\n");
+        ROS_FATAL("[failed]: mkycom_init() failed, check tty_path");
         return -2;
     }
 
