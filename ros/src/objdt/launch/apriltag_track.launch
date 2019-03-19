@@ -1,15 +1,20 @@
 <launch>
-  <include file="$(find realsense)/realsense2_camera/launch/rs_camera.launch" />
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch" />
 
   <node name="image_proc" pkg="image_proc" type="image_proc" ns="/camera/color" />
   
-  <include file="$(find apriltags2_ros)/apriltags2_ros/launch/continuous_detection.launch" >
-    <arg name="camera_name" value"/camera/color" />
+  <include file="$(find apriltags2_ros)/launch/continuous_detection.launch">
+    <arg name="launch_prefix" default="" /> <!-- set to value="gdbserver localhost:10000" for remote debugging -->
+    <arg name="node_namespace" default="apriltags2_ros_continuous_node" />
+    <arg name="camera_name" default="/camera/color" />
+    <arg name="camera_frame" default="camera" />
+    <arg name="image_topic" default="image_rect" />
     <rosparam command="load" file="$(find objdt)/config/settings.yaml" ns="$arg node_namespace)" />
     <rosparam command="load" file="$(find objdt)/config/tags.yaml" ns="$arg node_namespace)" />
   </include>
 
-  <!-- launch apriltag detector
+
+  <?ignore 
   <arg name="launch_prefix" default="" /> <!-- set to value="gdbserver localhost:10000" for remote debugging -->
   <arg name="node_namespace" default="apriltags2_ros_continuous_node" />
   <arg name="camera_name" default="/camera/color" />
@@ -28,4 +33,6 @@
     <param name="camera_frame" type="str" value="$(arg camera_frame)" />
     <param name="publish_tag_detections_image" type="bool" value="true" />      <!-- default: false -->
   </node>
-  -->
+  ?>  
+
+</launch>
