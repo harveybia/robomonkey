@@ -19,7 +19,7 @@ void print_usage(void) {
   printf("usage: rosrun mky_vctrl chassis_ctrl <tty_path>\n");
 }
 
-void lwheel_vtarget_callback(geometry_msgs::Twist vtarget) {
+void vtarget_callback(geometry_msgs::Twist vtarget) {
     lwheel_vtarget = vtarget.linear.x + vtarget.angular.z;
     rwheel_vtarget = vtarget.linear.x - vtarget.angular.z;
 
@@ -32,11 +32,12 @@ int main(int argc, char **argv) {
 
     if (argc < 2) {
         print_usage();
+        ROS_FATAL("[param]: check param usage");
         return -1;
     }
 
     if (mkycom_init(argv[1]) < 0) {
-        printf("[failed]: mkycom_init()\n");
+        ROS_FATAL("[failed]: mkycom_init() failed, check tty_path");
         return -2;
     }
 
@@ -47,7 +48,8 @@ int main(int argc, char **argv) {
 
     ros::NodeHandle node;
 
-    ros::Subscriber sub = node.subscribe("mky_lwheel_vtarget", MSG_QUEUE_SIZE, lwheel_vtarget_callback);
+    ros::Subscriber sub = node.subscribe(
+        "mky_vtarget", MSG_QUEUE_SIZE, vtarget_callback);
 
     ros::spin();
 
