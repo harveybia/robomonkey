@@ -1,0 +1,4 @@
+local
+/home/tiffany/Yr4/robomonkey/ros/devel/.private/local/lib/pkgconfig/local.pc /home/tiffany/Yr4/robomonkey/ros/devel/lib/pkgconfig/local.pc
+/home/tiffany/Yr4/robomonkey/ros/devel/.private/local/share/local/cmake/localConfig.cmake /home/tiffany/Yr4/robomonkey/ros/devel/share/local/cmake/localConfig.cmake
+/home/tiffany/Yr4/robomonkey/ros/devel/.private/local/share/local/cmake/localConfig-version.cmake /home/tiffany/Yr4/robomonkey/ros/devel/share/local/cmake/localConfig-version.cmake
