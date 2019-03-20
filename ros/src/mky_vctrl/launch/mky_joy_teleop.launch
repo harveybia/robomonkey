@@ -1,0 +1,21 @@
+<launch>
+
+  <arg name="tty_path" />
+  <arg name="scale_linear" />
+  <arg name="scale_angular" />
+
+  <node name="chassis_ctrl_node" pkg="mky_vctrl" args="$(arg tty_path)" type="chassis_ctrl_node">
+  </node>
+
+  <node name="relay" pkg="topic_tools" args="cmd_vel mky_vtarget" type="relay">
+  </node>
+
+  <node name="teleop_node" pkg="teleop_twist_joy" type="teleop_node">
+    <param name="scale_linear" value="$(arg scale_linear)" />
+    <param name="scale_angular" value="$(arg scale_angular)" />
+  </node>
+
+  <node name="joy_node" pkg="joy" type="joy_node">
+  </node>
+
+</launch>

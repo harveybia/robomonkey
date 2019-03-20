@@ -11,6 +11,8 @@
   *
   * Copyright (c) 2018 STMicroelectronics International N.V. 
   * All rights reserved.
+	*
+	* Copyright (c) 2019 Haowen Shi.
   *
   * Redistribution and use in source and binary forms, with or without 
   * modification, are permitted, provided that the following conditions are met:
@@ -142,8 +144,12 @@ void MX_FREERTOS_Init(void) {
     /* real time control task */
   taskENTER_CRITICAL();
   
+		/* chassis locomotion task */
+		
     osTimerDef(chassisTimer, chassis_task);
     chassis_timer_id = osTimerCreate(osTimer(chassisTimer), osTimerPeriodic, NULL);
+	
+		osTimerStart(chassis_timer_id, 10);
   
   /* USER CODE END RTOS_TIMERS */
 

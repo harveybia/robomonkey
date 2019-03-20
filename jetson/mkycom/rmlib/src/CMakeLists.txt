@@ -12,3 +12,19 @@ set(RMLIB_SOURCE
 )
 
 add_library(rmlib STATIC ${RMLIB_SOURCE})
+
+# Install to system
+set_target_properties(rmlib
+	PROPERTIES PUBLIC_HEADER "${RMLIB_INCLUDE_DIRS}/infantry_info.h;${RMLIB_INCLUDE_DIRS}/stm32f4xx_hal.h"
+)
+
+install(TARGETS rmlib
+	EXPORT rmlib
+	DESTINATION lib
+	PUBLIC_HEADER DESTINATION include
+)
+
+install(FILES rmlib-config.cmake DESTINATION ${CMAKE_DEST})
+install(EXPORT rmlib
+	DESTINATION ${CMAKE_DEST}
+)

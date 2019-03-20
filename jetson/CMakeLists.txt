@@ -7,12 +7,10 @@ if (APPLE)
 endif()
 set(CMAKE_CXX_STANDARD 11)
 
+set(RMLIB_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/mkycom/rmlib/include")
 
-set(MKYCOM_INCLUDE_DIRS "${MKYCOM_SOURCE_DIR}/include")
-set(RMLIB_INCLUDE_DIRS "${MKYCOM_SOURCE_DIR}/rmlib/include")
-
-include_directories(
-  ${RMLIB_INCLUDE_DIRS}
+set(CMAKE_DEST
+	lib
 )
 
 add_subdirectory(mkycom)
