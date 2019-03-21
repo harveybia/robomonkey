@@ -43,13 +43,18 @@ class SimpleControl:
         # pitch: up/down rotation about camera
         # yaw: camera rotation
 
-        lin_pid = PID(1, 0, 0)
+        lin_pid = PID(1000, 0, 0)
         ang_pid = PID(1, 0, 0)
+	lin_pid.setpoint = 2
         lin_vel = lin_pid(dist)
         ang_vel = ang_pid(theta)
-
-        self.cmd_vel.linear.x = lin_vel + ang_vel
-        self.cmd_vel.linear.y = lin_vel - ang_vel
+	
+	# velocity: current value
+        self.cmd_vel.linear.x = - lin_vel
+        self.cmd_vel.linear.y = 0
+	self.cmd_vel.angular.x = dist
+	self.cmd_vel.angular.y = theta
+        self.cmd_vel.angular.z = ang_vel
 
     def naive_control(self):
         if (self.pose.position.x < -0.01):
