@@ -80,7 +80,7 @@ class SimpleControl:
         self.cmd_vel.linear.y = 0
         self.cmd_vel.angular.x = dist
         self.cmd_vel.angular.y = theta
-        self.cmd_vel.angular.z = ang_vel
+        self.cmd_vel.angular.z = - ang_vel
 
     def naive_control(self):
         if (self.pose.position.x < -0.01):

@@ -1,0 +1,10 @@
+<launch>
+
+  <arg name="tty_path" />
+  <arg name="scale_linear" />
+  <arg name="scale_angular" />
+
+  <node name="chassis_ctrl_node" pkg="mky_vctrl" args="$(arg tty_path)" type="chassis_ctrl_node">
+  </node>
+
+</launch>

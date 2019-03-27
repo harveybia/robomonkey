@@ -1,5 +1,5 @@
 <launch>
-	<!-- <include file="$(find objdt)/launch/apriltag_track.launch" /> -->
+	<include file="$(find objdt)/launch/apriltag_track.launch" />
 
 	<arg name="max_lin_vel" default="1500"/>
 	<arg name="max_ang_vel" default="1500"/>
@@ -10,6 +10,8 @@
 	<arg name="ang_p_val" default="1000"/>
 	<arg name="ang_i_val" default="0"/>
 	<arg name="ang_d_val" default="0"/>
+
+    <remap from="task_control/cmd_vel" to="mky_vtarget"/>
 
     <node pkg="task_control" type="simple_control" name="simple_control" clear_params="true" output="screen" respawn="true">
       <!-- INPUT TOPICS -->
