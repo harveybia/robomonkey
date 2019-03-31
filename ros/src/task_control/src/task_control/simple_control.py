@@ -3,6 +3,7 @@ import time
 import math
 
 from geometry_msgs.msg import Twist, Pose
+from sensor_msgs.msg import Joy
 from apriltags2_ros.msg import AprilTagDetectionArray, AprilTagDetection
 from std_msgs.msg import String
 from simple_pid import PID
@@ -10,12 +11,14 @@ from tf.transformations import euler_from_quaternion
 
 class SimpleControl:
     def __init__(self):
+        self.stop = False
         self.cmd_vel = Twist()
         self.debug_msg = String()
         self.pose = Pose()
         cmd_pub = rospy.Publisher("task_control/cmd_vel", Twist, queue_size=10)
         debug_pub = rospy.Publisher("task_control/debug", String, queue_size=10)
         rospy.Subscriber("tag_detections", AprilTagDetectionArray, callback=self.on_apriltag)
+        rospy.Subscriber("joy", Joy, callback=self.on_joy)
         r = rospy.Rate(4)
 
 
@@ -33,6 +36,10 @@ class SimpleControl:
 
 
         while not rospy.is_shutdown():
+            if (self.stop):
+                self.cmd_vel.linear.x = 0
+                self.cmd_vel.linear.y = 0
+                self.cmd_vel.angular.z = 0
             cmd_pub.publish(self.cmd_vel)
             debug_pub.publish(self.debug_msg)
             r.sleep()
@@ -47,6 +54,12 @@ class SimpleControl:
             self.cmd_vel.linear.x = 0
             self.cmd_vel.linear.y = 0
             self.cmd_vel.angular.z = 0
+
+    def on_joy(self, joy):
+        if(joy.buttons[0] == 1):
+            self.stop = False
+        elif(joy.buttons[2] == 1):
+            self.stop = True
 
     def pid_control(self):
         dist = math.sqrt((self.pose.position.x ** 2) + (self.pose.position.y ** 2) + (self.pose.position.z **2))
