@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(task_control)
 
 find_package(catkin REQUIRED COMPONENTS
+  objdt
   apriltags2_ros
   realsense2_camera
   roscpp

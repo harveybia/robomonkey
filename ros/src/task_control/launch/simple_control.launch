@@ -1,6 +1,34 @@
 <launch>
+	<include file="$(find objdt)/launch/apriltag_track.launch" />
+
+	<arg name="max_lin_vel" default="1500"/>
+	<arg name="max_ang_vel" default="1500"/>
+	<arg name="runner_dist" default="2"/>
+	<arg name="lin_p_val" default="1000"/>
+	<arg name="lin_i_val" default="0"/>
+	<arg name="lin_d_val" default="0"/>
+	<arg name="ang_p_val" default="1000"/>
+	<arg name="ang_i_val" default="0"/>
+	<arg name="ang_d_val" default="0"/>
+
+    <remap from="task_control/cmd_vel" to="mky_vtarget"/>
+
     <node pkg="task_control" type="simple_control" name="simple_control" clear_params="true" output="screen" respawn="true">
       <!-- INPUT TOPICS -->
+        <param name="max_lin_vel" value="$(arg max_lin_vel)" />
+    	<param name="max_ang_vel" value="$(arg max_ang_vel)" />
+    	<param name="runner_dist" value="$(arg runner_dist)" />
+    	<param name="lin_p_val" value="$(arg lin_p_val)" />
+    	<param name="lin_i_val" value="$(arg lin_i_val)" />
+    	<param name="lin_d_val" value="$(arg lin_d_val)" />
+    	<param name="ang_p_val" value="$(arg ang_p_val)" />
+    	<param name="ang_i_val" value="$(arg ang_i_val)" />
+    	<param name="ang_d_val" value="$(arg ang_d_val)" />
+
       <!-- OUTPUT TOPICS -->
     </node>
+
+    <node name="joy_node" pkg="joy" type="joy_node">
+    </node>
+
 </launch>
